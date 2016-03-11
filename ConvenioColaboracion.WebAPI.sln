@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenioColaboracion.WebAPI", "ConvenioColaboracion.WebAPI\ConvenioColaboracion.WebAPI.csproj", "{7DDC2F4C-E106-4728-B136-5D675984B24F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3010DB89-292F-4A9C-B2B9-5941384D728E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{12BEC9E1-2628-4F29-9A23-09605EE41F25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{D2D3FEEA-C97D-48D3-B5B2-EC01EED85BFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenioColaboracion.WebAPI.Core", "ConvenioColaboracion.WebAPI.Core\ConvenioColaboracion.WebAPI.Core.csproj", "{CE1596DD-36B6-43A5-980A-75A256152103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenioColaboracion.WebAPI.Database", "ConvenioColaboracion.WebAPI.DataBaseAccess\ConvenioColaboracion.WebAPI.Database.csproj", "{3A7C757E-26E0-4DF1-8047-72D35EE8BE51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenioColaboracion.WebAPI.DataBase.Tests", "ConvenioColaboracion.WebAPI.DataBaseAccess.Test\ConvenioColaboracion.WebAPI.DataBase.Tests.csproj", "{2588D858-88DC-443A-92E8-7AEC17AC250F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvenioColaboracion.WebAPI.Entities", "ConvenioColaboracion.WebAPI.Entities\ConvenioColaboracion.WebAPI.Entities.csproj", "{BA6F33E2-30C1-4022-BC47-D31D12D4A3E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{99C65850-4D7D-4E37-8390-495950120C49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DDC2F4C-E106-4728-B136-5D675984B24F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DDC2F4C-E106-4728-B136-5D675984B24F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DDC2F4C-E106-4728-B136-5D675984B24F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DDC2F4C-E106-4728-B136-5D675984B24F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE1596DD-36B6-43A5-980A-75A256152103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1596DD-36B6-43A5-980A-75A256152103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1596DD-36B6-43A5-980A-75A256152103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1596DD-36B6-43A5-980A-75A256152103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A7C757E-26E0-4DF1-8047-72D35EE8BE51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A7C757E-26E0-4DF1-8047-72D35EE8BE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A7C757E-26E0-4DF1-8047-72D35EE8BE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A7C757E-26E0-4DF1-8047-72D35EE8BE51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2588D858-88DC-443A-92E8-7AEC17AC250F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2588D858-88DC-443A-92E8-7AEC17AC250F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2588D858-88DC-443A-92E8-7AEC17AC250F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2588D858-88DC-443A-92E8-7AEC17AC250F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA6F33E2-30C1-4022-BC47-D31D12D4A3E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA6F33E2-30C1-4022-BC47-D31D12D4A3E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA6F33E2-30C1-4022-BC47-D31D12D4A3E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA6F33E2-30C1-4022-BC47-D31D12D4A3E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE1596DD-36B6-43A5-980A-75A256152103} = {12BEC9E1-2628-4F29-9A23-09605EE41F25}
+		{3A7C757E-26E0-4DF1-8047-72D35EE8BE51} = {D2D3FEEA-C97D-48D3-B5B2-EC01EED85BFB}
+		{2588D858-88DC-443A-92E8-7AEC17AC250F} = {3010DB89-292F-4A9C-B2B9-5941384D728E}
+		{BA6F33E2-30C1-4022-BC47-D31D12D4A3E3} = {99C65850-4D7D-4E37-8390-495950120C49}
+	EndGlobalSection
+EndGlobal
