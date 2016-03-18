@@ -93,13 +93,78 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Execute the stored procedure.
                         command.ExecuteNonQuery();
 
-                        var isInserted = ((IDataParameter)command.Parameters["affectedRows"]).Value == DBNull.Value ||
+                        var convenioId = ((IDataParameter)command.Parameters["affectedRows"]).Value == DBNull.Value ||
                                                  ((IDataParameter)command.Parameters["affectedRows"]).Value == null
                                                  ? 0
                                                  : Convert.ToInt32(((IDataParameter)command.Parameters["affectedRows"]).Value.ToString());
 
-                        if (isInserted > 0)
+                        if (convenioId > 0)
                         {
+
+                            // The SQL stored procedure name.
+                            const string ParteStoredProcedure = @"USP_CONVENIO_PARTE_INSERT";
+
+                            foreach (var convenioParte in request.Partes)
+                            {
+                                var i = 0;
+                                // Create database command object.
+                                using (var commandParte = this.databaseHelper.CreateStoredProcDbCommand(ParteStoredProcedure, connection))
+                                {
+                                    // Clear the parameters.
+                                    command.Parameters.Clear();
+
+                                    // Add the parameters to the list.
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, i /*convenioParte.ParteId*/));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("representante", OracleDbType.Varchar2, convenioParte.Representante));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("telefonos", OracleDbType.Varchar2, convenioParte.Telefono));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("eMail", OracleDbType.Varchar2, convenioParte.CorreoElectronico));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("domicilio", OracleDbType.Varchar2, convenioParte.Domicilio));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("cargo", OracleDbType.Varchar2, convenioParte.Cargo));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                                    // Execute the stored procedure.
+                                    commandParte.ExecuteNonQuery();
+
+                                    var c = ((IDataParameter)commandParte.Parameters["affectedRows"]).Value == DBNull.Value ||
+                                                             ((IDataParameter)commandParte.Parameters["affectedRows"]).Value == null
+                                                             ? 0
+                                                             : Convert.ToInt32(((IDataParameter)commandParte.Parameters["affectedRows"]).Value.ToString());
+                                }
+                                i++;
+                            }
+
+                            // The SQL stored procedure name.
+                            const string CompromisoStoredProcedure = @"USP_CONVENIO_COMPROMISO_INSERT";
+
+                            foreach (var compromiso in request.Compromisos)
+                            {
+                                // Create database command object.
+                                using (var commandCompromiso = this.databaseHelper.CreateStoredProcDbCommand(CompromisoStoredProcedure, connection))
+                                {
+                                    // Clear the parameters.
+                                    command.Parameters.Clear();
+
+                                    // Add the parameters to the list.
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, 1 /*compromiso.CompromisoId*/));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("partes", OracleDbType.Varchar2, compromiso.Partes));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromiso", OracleDbType.Varchar2, compromiso.Compromiso));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("fechaCompromiso", OracleDbType.Date, compromiso.FechaCompromiso));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("areaVinculante", OracleDbType.Varchar2, compromiso.AreaVinculante));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, compromiso.Avance));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("poderacion", OracleDbType.Int32, compromiso.Ponderacion));
+                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                                    commandCompromiso.ExecuteNonQuery();
+
+                                    var c = ((IDataParameter)commandCompromiso.Parameters["affectedRows"]).Value == DBNull.Value ||
+                                                             ((IDataParameter)commandCompromiso.Parameters["affectedRows"]).Value == null
+                                                             ? 0
+                                                             : Convert.ToInt32(((IDataParameter)commandCompromiso.Parameters["affectedRows"]).Value.ToString());
+                                }
+                            }
+
                             result = true;
                             transaction.Commit();
                         }
@@ -382,6 +447,205 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return convenio;
         }
+
+        #region Convenio  Catalogos form
+        /// <summary>
+        /// Gets the MATERIA list from the database. 
+        /// </summary>
+        /// <returns> The list of MATERIAS.</returns>
+        public IEnumerable<EMateria> GetMateria()
+        {
+            // The expected model list.
+            var materiaList = new List<EMateria>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_MATERIA_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var materia = new EMateria();
+
+                                        materia.MateriaId = reader["ID_MATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_MATERIA"]);
+                                        materia.GrupoMateriaId = reader["ID_GRUPO_MATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_GRUPO_MATERIA"]);
+                                        materia.Materia = reader["MATERIA"] is DBNull ? string.Empty : Convert.ToString(reader["MATERIA"]);
+
+                                        // Add the element to the list.
+                                        materiaList.Add(materia);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return materiaList;
+        }
+
+        /// <summary>
+        /// Gets the area list from the database. 
+        /// </summary>
+        /// <returns> The list of areas.</returns>
+        public IEnumerable<EArea> GetArea()
+        {
+            // The expected model list.
+            var areaList = new List<EArea>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_AREA_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var area = new EArea();
+
+                                        area.AreaId = reader["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_AREA"]);
+                                        area.Ramo = reader["RAMO"] is DBNull ? 0 : Convert.ToInt32(reader["RAMO"]);
+                                        area.Ur = reader["UR"] is DBNull ? string.Empty : Convert.ToString(reader["UR"]);
+                                        area.Area = reader["AREA"] is DBNull ? string.Empty : Convert.ToString(reader["AREA"]);
+
+                                        // Add the element to the list.
+                                        areaList.Add(area);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return areaList;
+        }
+
+        /// <summary>
+        /// Gets the PARTE list from the database. 
+        /// </summary>
+        /// <returns> The list of PARTES.</returns>
+        public IEnumerable<EParte> GetParte()
+        {
+            // The expected model list.
+            var parteList = new List<EParte>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_PARTE_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var parte = new EParte();
+
+                                        parte.ParteId = reader["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(reader["ID_PARTE"]);
+                                        parte.Parte = reader["PARTE"] is DBNull ? string.Empty : Convert.ToString(reader["PARTE"]);
+                                        parte.Clave = reader["CLAVE"] is DBNull ? string.Empty : Convert.ToString(reader["CLAVE"]);
+                                        parte.Representante = reader["REPRESENTANTE"] is DBNull ? string.Empty : Convert.ToString(reader["REPRESENTANTE"]);
+                                        parte.Siglas = reader["SIGLAS"] is DBNull ? string.Empty : Convert.ToString(reader["SIGLAS"]);
+                                        parte.PaisId = reader["ID_PAIS"] is DBNull ? string.Empty : Convert.ToString(reader["ID_PAIS"]);
+                                        parte.EntidadId = reader["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(reader["ID_ENTIDAD"]);
+                                        parte.GobiernoId = reader["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(reader["ID_GOBIERNO"]);
+
+                                        // Add the element to the list.
+                                        parteList.Add(parte);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return parteList;
+        }
+
+
+        #endregion
 
         #region Auxiliar Methods
         /// <summary>

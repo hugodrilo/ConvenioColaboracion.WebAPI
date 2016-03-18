@@ -43,11 +43,20 @@ namespace ConvenioColaboracion.WebAPI
                 routeTemplate: "api/convenio/{id}",
                 defaults: new { controller = "Convenio", id = RouteParameter.Optional });
 
-            //// // Add the default route.
-            //// config.Routes.MapHttpRoute(
-            ////    name: "DefaultApi",
-            ////    routeTemplate: "api/{controller}/{id}",
-            ////    defaults: new { id = RouteParameter.Optional });
+            config.Routes.MapHttpRoute(
+                name: "Materia",
+                routeTemplate: "api/materia/{id}",
+                defaults: new { controller = "Materia", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Area",
+                routeTemplate: "api/area/{id}",
+                defaults: new { controller = "Area", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Parte",
+                routeTemplate: "api/parte/{id}",
+                defaults: new { controller = "Parte", id = RouteParameter.Optional });
 
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";

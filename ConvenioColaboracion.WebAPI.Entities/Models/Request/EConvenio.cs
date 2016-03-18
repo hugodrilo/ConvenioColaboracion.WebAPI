@@ -133,16 +133,28 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public char? Estatus { get; set; }
 
         /// <summary>
-        /// Gets or sets the RUTA DOCUMENTO.
+        /// Gets or sets the DOCUMENTO.
         /// </summary>
-        /// <value> The RUTA DOCUMENTO.</value>
+        /// <value> The DOCUMENTO.</value>
+        public string Documento { get; set; }
+
+        /// <summary>
+        /// Gets or sets the NOMBRE DOCUMENTO.
+        /// </summary>
+        /// <value> The NOMBRE DOCUMENTO.</value>
+        public string NombreDocumento { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RUTA DOCUMENTO on the server.
+        /// </summary>
+        /// <value> The RUTA DOCUMENTO on the server.</value>
         public string RutaDocumento { get; set; }
 
         /// <summary>
-        /// Gets or sets the PARTES.
+        /// Gets or sets the CONVENIO PARTE.
         /// </summary>
-        /// <value> The PARTES list.</value>
-        public IEnumerable<EParte> Partes { get; set; }
+        /// <value> The CONVENIO PARTE list.</value>
+        public IEnumerable<EConvenioParte> Partes { get; set; }
 
         /// <summary>
         /// Gets or sets the COMPROMISOS.

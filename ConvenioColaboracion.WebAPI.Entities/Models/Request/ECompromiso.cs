@@ -65,8 +65,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <value>The PONDERACION percentage.</value>
         public int? Ponderacion { get; set; }
 
-        /**TODO: Checar con sergio los siguientes campos, si es que deben ser considerados en esta entidad*/
-
         /// <summary>
         /// Gets or sets the AREA VINCULANTE identifier.
         /// </summary>

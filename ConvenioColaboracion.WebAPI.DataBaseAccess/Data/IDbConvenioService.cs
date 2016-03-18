@@ -27,5 +27,23 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         /// <param name="convenioId">The CONVENIO identifier.</param>
         /// <returns>Expected CONVENIO model.</returns>
         EConvenio Get(int convenioId);
+
+        /// <summary>
+        /// Gets all the MATERIAS from the database. 
+        /// </summary>
+        /// <returns>Expected list of MATERIAS.</returns>
+        IEnumerable<EMateria> GetMateria();
+
+        /// <summary>
+        /// Gets the area list from the database. 
+        /// </summary>
+        /// <returns> The list of areas.</returns>
+        IEnumerable<EArea> GetArea();
+
+        /// <summary>
+        /// Gets the PARTE list from the database. 
+        /// </summary>
+        /// <returns> The list of PARTES.</returns>
+        IEnumerable<EParte> GetParte();
     }
 }

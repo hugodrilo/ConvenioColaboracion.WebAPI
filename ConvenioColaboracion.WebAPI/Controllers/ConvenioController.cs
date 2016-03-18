@@ -7,6 +7,8 @@
 
 namespace ConvenioColaboracion.WebAPI.Controllers
 {
+    using System;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -28,6 +30,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// Gets a list of CONVENIOS.
         /// </summary>
         /// <returns>A list of CONVENIOS.</returns>
+        [ActionName("GetAll")]
         [HttpGet]
         public HttpResponseMessage GetAll()
         {
@@ -49,6 +52,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The CONVENIO identifier.</param>
         /// <returns>The expected CONVENIO model.</returns>
+        [ActionName("Get")]
         [HttpGet]
         public HttpResponseMessage Get(int id)
         {
@@ -80,6 +84,15 @@ namespace ConvenioColaboracion.WebAPI.Controllers
             if (convenioRequest == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(convenioRequest.Documento))
+            {
+                var finalPath = GetDocumentPath(convenioRequest.NombreDocumento);
+
+                var copied = CopyDocument(convenioRequest.Documento, finalPath);
+
+                convenioRequest.RutaDocumento = finalPath;
             }
 
             // Call the data service
@@ -140,5 +153,64 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             return Request.CreateResponse(HttpStatusCode.Created, "Convenio Eliminado.");
         }
+
+        #region AuxiliarMethods
+        /// <summary>
+        /// Gets the document path.
+        /// </summary>
+        /// <param name="nombreDocumento">The file name</param>
+        /// <returns>The generated document path.</returns>
+        private static string GetDocumentPath(string nombreDocumento)
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            const string ConvenioFolderName = "Convenio";
+            var destinyDirectory = baseDirectory + @"\" + ConvenioFolderName;
+
+            if (!Directory.Exists(destinyDirectory))
+            {
+                Directory.CreateDirectory(destinyDirectory);
+            }
+
+            var destinyFilePath = destinyDirectory + @"\" + nombreDocumento;
+
+            return destinyFilePath;
+        }
+
+        /// <summary>
+        /// Copies the CONVENIO document to the destiny path.
+        /// </summary>
+        /// <param name="document">The document string representation.</param>
+        /// <param name="finalPath">The destiny file path.</param>
+        /// <returns>A value indicating whether the file was copied or not.</returns>
+        private static bool CopyDocument(string document, string finalPath)
+        {
+            var fileCopied = false;
+
+            try
+            {
+                var myString = document.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var bytes = Convert.FromBase64String(myString[1]);
+
+                using (var ms = new MemoryStream(bytes))
+                {
+                    using (var file = new FileStream(finalPath, FileMode.Create, FileAccess.Write))
+                    {
+                        if (file.CanWrite)
+                        {
+                            // Write to file
+                            ms.WriteTo(file);
+                            fileCopied = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return fileCopied;
+        }
+        #endregion
     }
 }
