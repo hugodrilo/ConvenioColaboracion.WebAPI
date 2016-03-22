@@ -30,6 +30,12 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         [Display(Name = "ParteId")]
         public int ParteId { get; set; }
 
+        /////// <summary>
+        /////// Gets or sets the PARTE identifier.
+        /////// </summary>
+        /////// <value>The PARTE identifier.</value>
+        ////public IEnumerable<EParte> Partes { get; set; }
+
         /// <summary>
         /// Gets or sets the REPRESENTANTE text.
         /// </summary>

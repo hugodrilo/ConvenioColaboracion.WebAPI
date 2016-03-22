@@ -7,6 +7,7 @@
 
 namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Test.Integration
 {
+    using ConvenioColaboracion.WebAPI.Entities.Models.Request;
     using Fixtures;
     using Xunit;
 
@@ -40,6 +41,24 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Test.Integration
 
             // The method to test.
             var result = sut.GetAll();
+
+            // Asserts
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Test the Post method for success
+        /// </summary>
+        [Fact]
+        public void DbConvenioService_INTG_Post_Success()
+        {
+            // The system under test.
+            var sut = this.fixture.Sut;
+
+            var convenio = new EConvenio();
+
+            // The method to test.
+            var result = sut.Insert(convenio);
 
             // Asserts
             Assert.NotNull(result);

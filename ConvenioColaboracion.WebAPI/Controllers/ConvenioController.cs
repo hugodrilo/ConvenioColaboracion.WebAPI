@@ -164,7 +164,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             const string ConvenioFolderName = "Convenio";
-            var destinyDirectory = baseDirectory + @"\" + ConvenioFolderName;
+            var destinyDirectory = baseDirectory + ConvenioFolderName;
 
             if (!Directory.Exists(destinyDirectory))
             {

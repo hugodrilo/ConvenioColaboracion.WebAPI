@@ -100,13 +100,11 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         if (convenioId > 0)
                         {
-
                             // The SQL stored procedure name.
                             const string ParteStoredProcedure = @"USP_CONVENIO_PARTE_INSERT";
 
                             foreach (var convenioParte in request.Partes)
                             {
-                                var i = 0;
                                 // Create database command object.
                                 using (var commandParte = this.databaseHelper.CreateStoredProcDbCommand(ParteStoredProcedure, connection))
                                 {
@@ -115,7 +113,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                                     // Add the parameters to the list.
                                     commandParte.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, i /*convenioParte.ParteId*/));
+                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, convenioParte.ParteId));
                                     commandParte.Parameters.Add(this.databaseHelper.CreateParameter("representante", OracleDbType.Varchar2, convenioParte.Representante));
                                     commandParte.Parameters.Add(this.databaseHelper.CreateParameter("telefonos", OracleDbType.Varchar2, convenioParte.Telefono));
                                     commandParte.Parameters.Add(this.databaseHelper.CreateParameter("eMail", OracleDbType.Varchar2, convenioParte.CorreoElectronico));
@@ -131,7 +129,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                                              ? 0
                                                              : Convert.ToInt32(((IDataParameter)commandParte.Parameters["affectedRows"]).Value.ToString());
                                 }
-                                i++;
                             }
 
                             // The SQL stored procedure name.
@@ -146,7 +143,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                     command.Parameters.Clear();
 
                                     // Add the parameters to the list.
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, 1 /*compromiso.CompromisoId*/));
                                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
                                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("partes", OracleDbType.Varchar2, compromiso.Partes));
                                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromiso", OracleDbType.Varchar2, compromiso.Compromiso));
@@ -643,7 +639,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return parteList;
         }
-
 
         #endregion
 
