@@ -509,6 +509,71 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         }
 
         /// <summary>
+        /// Gets all the SUBMATERIAS from the database. 
+        /// </summary>
+        /// <param name="materiaId">The MATERIA identifier.</param>
+        /// <returns>Expected list of SUBMATERIAS.</returns>
+        public IEnumerable<EMateria> GetSubMateria(int materiaId)
+        {
+            // The expected model list.
+            var materiaList = new List<EMateria>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_SUBMATERIA_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, materiaId));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var materia = new EMateria();
+
+                                        materia.MateriaId = reader["ID_MATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_MATERIA"]);
+                                        materia.GrupoMateriaId = reader["ID_GRUPO_MATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_GRUPO_MATERIA"]);
+                                        materia.Materia = reader["MATERIA"] is DBNull ? string.Empty : Convert.ToString(reader["MATERIA"]);
+
+                                        // Add the element to the list.
+                                        materiaList.Add(materia);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return materiaList;
+        }
+
+        /// <summary>
         /// Gets the area list from the database. 
         /// </summary>
         /// <returns> The list of areas.</returns>

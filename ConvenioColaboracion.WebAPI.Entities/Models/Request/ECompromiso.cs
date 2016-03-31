@@ -19,14 +19,13 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the COMPROMISO identifier.
         /// </summary>
         /// <value>The COMPROMISO identifier.</value>
-        [Required(ErrorMessage = "CompromisoId is required.")]
-        [Display(Name = "CompromisoId")]
         public int CompromisoId { get; set; }
 
         /// <summary>
         /// Gets or sets the CONVENIO identifier.
         /// </summary>
         /// <value>The CONVENIO identifier.</value>
+        [Required(ErrorMessage = "ConvenioId is required.")]
         public int? ConvenioId { get; set; }
 
         /// <summary>
@@ -39,6 +38,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the PARTES text.
         /// </summary>
         /// <value> The PARTES text.</value>
+        [Required(ErrorMessage = "Compromiso is required.")]
         public string Compromiso { get; set; }
 
         /// <summary>
@@ -51,6 +51,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the AREA VINCULANTE text.
         /// </summary>
         /// <value> The AREA VINCULANTE text.</value>
+        [Required(ErrorMessage = "AreaVinculante is required.")]
         public string AreaVinculante { get; set; }
 
         /// <summary>

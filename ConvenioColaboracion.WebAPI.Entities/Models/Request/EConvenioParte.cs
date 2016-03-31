@@ -30,17 +30,19 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         [Display(Name = "ParteId")]
         public int ParteId { get; set; }
 
-        /////// <summary>
-        /////// Gets or sets the PARTE identifier.
-        /////// </summary>
-        /////// <value>The PARTE identifier.</value>
-        ////public IEnumerable<EParte> Partes { get; set; }
-
         /// <summary>
         /// Gets or sets the REPRESENTANTE text.
         /// </summary>
         /// <value> The REPRESENTANTE text.</value>
+        [Required(ErrorMessage = "Representante is required.")]
         public string Representante { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CARGO text.
+        /// </summary>
+        /// <value> The CARGO text.</value>
+        [Required(ErrorMessage = "Cargo is required.")]
+        public string Cargo { get; set; }
 
         /// <summary>
         /// Gets or sets the TELEFONO text.
@@ -59,11 +61,5 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// </summary>
         /// <value> The DOMICILIO text.</value>
         public string Domicilio { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CARGO text.
-        /// </summary>
-        /// <value> The CARGO text.</value>
-        public string Cargo { get; set; }
     }
 }

@@ -35,6 +35,13 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         IEnumerable<EMateria> GetMateria();
 
         /// <summary>
+        /// Gets all the SUBMATERIAS from the database. 
+        /// </summary>
+        /// <param name="materiaId">The MATERIA identifier.</param>
+        /// <returns>Expected list of SUBMATERIAS.</returns>
+        IEnumerable<EMateria> GetSubMateria(int materiaId);
+
+        /// <summary>
         /// Gets the area list from the database. 
         /// </summary>
         /// <returns> The list of areas.</returns>

@@ -28,12 +28,15 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the NUMERO CONVENIO.
         /// </summary>
         /// <value> The NUMERO CONVENIO.</value>
+        [Required(ErrorMessage = "NumeroConvenio is required.")]
+        ////[StringLength(255, MinimumLength = 3)] //// Validation tests sample
         public string NumeroConvenio { get; set; }
 
         /// <summary>
         /// Gets or sets the CONVENIO text.
         /// </summary>
         /// <value> The CONVENIO text.</value>
+        [Required(ErrorMessage = "Convenio is required.")]
         public string Convenio { get; set; }
 
         /// <summary>
@@ -52,7 +55,8 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the FECHA SUSCRIPCION.
         /// </summary>
         /// <value> The FECHA SUSCRIPCION.</value>
-        public DateTime? FechaSuscripcion { get; set; }
+        [Required(ErrorMessage = "FechaSuscripcion is required.")]
+        public DateTime FechaSuscripcion { get; set; }
 
         /// <summary>
         /// Gets or sets the FECHA TERMINO.
@@ -64,7 +68,8 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the MATERIA identifier.
         /// </summary>
         /// <value>The MATERIA identifier.</value>
-        public int? MateriaId { get; set; }
+        [Required(ErrorMessage = "MateriaId is required.")]
+        public int MateriaId { get; set; }
 
         /// <summary>
         /// Gets or sets the SUBMATERIA identifier.
@@ -76,6 +81,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the AREA VINCULANTE identifier.
         /// </summary>
         /// <value>The AREA VINCULANTE identifier.</value>
+        [Required(ErrorMessage = "AreaVinculanteId is required.")]
         public int? AreaVinculanteId { get; set; }
 
         /// <summary>
@@ -136,6 +142,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the DOCUMENTO.
         /// </summary>
         /// <value> The DOCUMENTO.</value>
+        [Required(ErrorMessage = "Documento is required.")]
         public string Documento { get; set; }
 
         /// <summary>

@@ -81,29 +81,34 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody] EConvenio convenioRequest)
         {
-            if (convenioRequest == null)
+            if (ModelState.IsValid)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+                if (convenioRequest == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+                }
+
+                if (!string.IsNullOrWhiteSpace(convenioRequest.Documento))
+                {
+                    var finalPath = GetDocumentPath(convenioRequest.NombreDocumento);
+
+                    var copied = CopyDocument(convenioRequest.Documento, finalPath);
+
+                    convenioRequest.RutaDocumento = finalPath;
+                }
+
+                // Call the data service
+                var result = this.DbConvenioService.Insert(convenioRequest);
+
+                if (!result)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Convenio no insertado.");
+                }
+
+                return Request.CreateResponse(HttpStatusCode.Created, "Convenio insertado.");
             }
 
-            if (!string.IsNullOrWhiteSpace(convenioRequest.Documento))
-            {
-                var finalPath = GetDocumentPath(convenioRequest.NombreDocumento);
-
-                var copied = CopyDocument(convenioRequest.Documento, finalPath);
-
-                convenioRequest.RutaDocumento = finalPath;
-            }
-
-            // Call the data service
-            var result = this.DbConvenioService.Insert(convenioRequest);
-
-            if (!result)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Convenio no insertado.");
-            }
-
-            return Request.CreateResponse(HttpStatusCode.Created, "Convenio insertado.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
         }
 
         /// <summary>
@@ -114,20 +119,26 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         [HttpPut]
         public HttpResponseMessage Put([FromBody] EConvenio convenioRequest)
         {
-            if (convenioRequest == null)
+            if (ModelState.IsValid)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+
+                if (convenioRequest == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+                }
+
+                // Call the data service
+                var result = this.DbConvenioService.Update(convenioRequest);
+
+                if (!result)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Convenio no actualizado.");
+                }
+
+                return Request.CreateResponse(HttpStatusCode.Created, "Convenio Actualizado.");
             }
 
-            // Call the data service
-            var result = this.DbConvenioService.Update(convenioRequest);
-
-            if (!result)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Convenio no actualizado.");
-            }
-
-            return Request.CreateResponse(HttpStatusCode.Created, "Convenio Actualizado.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
         }
 
         /// <summary>
@@ -138,20 +149,25 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         [HttpDelete]
         public HttpResponseMessage Delete([FromBody] EConvenio convenioRequest)
         {
-            if (convenioRequest == null)
+            if (ModelState.IsValid)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+                if (convenioRequest == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
+                }
+
+                // Call the data service
+                var result = this.DbConvenioService.Delete(convenioRequest);
+
+                if (!result)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Convenio no eliminado.");
+                }
+
+                return Request.CreateResponse(HttpStatusCode.Created, "Convenio Eliminado.");
             }
 
-            // Call the data service
-            var result = this.DbConvenioService.Delete(convenioRequest);
-
-            if (!result)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Convenio no eliminado.");
-            }
-
-            return Request.CreateResponse(HttpStatusCode.Created, "Convenio Eliminado.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
         }
 
         #region AuxiliarMethods

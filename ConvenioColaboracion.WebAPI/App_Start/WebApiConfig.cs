@@ -49,6 +49,11 @@ namespace ConvenioColaboracion.WebAPI
                 defaults: new { controller = "Materia", id = RouteParameter.Optional });
 
             config.Routes.MapHttpRoute(
+                name: "SubMateria",
+                routeTemplate: "api/submateria/{id}",
+                defaults: new { controller = "SubMateria", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
                 name: "Area",
                 routeTemplate: "api/area/{id}",
                 defaults: new { controller = "Area", id = RouteParameter.Optional });
