@@ -18,16 +18,12 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the CONVENIO identifier.
         /// </summary>
         /// <value>The CONVENIO identifier.</value>
-        [Required(ErrorMessage = "convenioId is required.")]
-        [Display(Name = "ConvenioId")]
         public int ConvenioId { get; set; }
 
         /// <summary>
         /// Gets or sets the PARTE identifier.
         /// </summary>
         /// <value>The PARTE identifier.</value>
-        [Required(ErrorMessage = "parteId is required.")]
-        [Display(Name = "ParteId")]
         public int ParteId { get; set; }
 
         /// <summary>

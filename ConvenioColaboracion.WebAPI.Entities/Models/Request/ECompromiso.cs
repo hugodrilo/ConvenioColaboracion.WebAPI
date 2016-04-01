@@ -25,7 +25,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the CONVENIO identifier.
         /// </summary>
         /// <value>The CONVENIO identifier.</value>
-        [Required(ErrorMessage = "ConvenioId is required.")]
         public int? ConvenioId { get; set; }
 
         /// <summary>

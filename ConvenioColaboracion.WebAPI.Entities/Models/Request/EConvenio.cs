@@ -20,8 +20,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the CONVENIO identifier.
         /// </summary>
         /// <value>The CONVENIO identifier.</value>
-        [Required(ErrorMessage = "ConvenioId is required.")]
-        [Display(Name = "ConvenioId")]
         public int ConvenioId { get; set; }
 
         /// <summary>
@@ -29,7 +27,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// </summary>
         /// <value> The NUMERO CONVENIO.</value>
         [Required(ErrorMessage = "NumeroConvenio is required.")]
-        ////[StringLength(255, MinimumLength = 3)] //// Validation tests sample
         public string NumeroConvenio { get; set; }
 
         /// <summary>

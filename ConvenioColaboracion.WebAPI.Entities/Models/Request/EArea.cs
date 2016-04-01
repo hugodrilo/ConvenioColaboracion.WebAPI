@@ -7,8 +7,6 @@
 
 namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
 {
-    using System.ComponentModel.DataAnnotations;
-
     /// <summary>
     /// The Area request model.
     /// </summary>
@@ -18,8 +16,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the area identifier.
         /// </summary>
         /// <value>The area identifier.</value>
-        [Required(ErrorMessage = "areaId is required.")]
-        [Display(Name = "areaId")]
         public int AreaId { get; set; }
 
         /// <summary>

@@ -7,8 +7,6 @@
 
 namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
 {
-    using System.ComponentModel.DataAnnotations;
-
     /// <summary>
     /// The PARTE request model.
     /// </summary>
@@ -18,8 +16,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the PARTE identifier.
         /// </summary>
         /// <value>The PARTE identifier.</value>
-        [Required(ErrorMessage = "parteId is required.")]
-        [Display(Name = "ParteId")]
         public int ParteId { get; set; }
 
         /// <summary>
