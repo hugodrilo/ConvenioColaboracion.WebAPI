@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AreaController.cs" company="SFP">
+// <copyright file="TipoAreaController.cs" company="SFP">
 //  Copyright (c) 2016 All Rights Reserved
 //  <author>Arquitectonet2</author>
 // </copyright>
@@ -17,7 +17,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The area controller implementation class.
     /// </summary>
-    public class AreaController : ApiController
+    public class TipoAreaController : ApiController
     {
         /// <summary>
         /// Gets or sets the database CONVENIO service.
@@ -25,23 +25,23 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         public IDbConvenioService DbConvenioService { get; set; }
 
         /// <summary>
-        /// Gets a list of areas.
+        /// Gets a list of TIPO areas.
         /// </summary>
-        /// <returns>A list of areas.</returns>
+        /// <returns>A list of TIPO areas.</returns>
         [HttpGet]
         public HttpResponseMessage Get()
         {
             // Call the data service
-            var areaList = this.DbConvenioService.GetArea();
+            var tipoAreaList = this.DbConvenioService.GetTipoArea();
 
-            var areas = areaList as EArea[] ?? areaList.ToArray();
+            var tipoAarea = tipoAreaList as ETipoArea[] ?? tipoAreaList.ToArray();
 
-            if (!areas.Any())
+            if (!tipoAarea.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron areas.");
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron tipo de areas");
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, areas);
+            return Request.CreateResponse(HttpStatusCode.OK, tipoAarea);
         }
     }
 }

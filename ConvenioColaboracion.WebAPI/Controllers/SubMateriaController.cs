@@ -25,8 +25,9 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         public IDbConvenioService DbConvenioService { get; set; }
 
         /// <summary>
-        /// Gets a list of MATERIAS.
+        /// Gets a list of MATERIAS (SUBMATERIAS).
         /// </summary>
+        /// <param name="id">The MATERIA identifier.</param>
         /// <returns>A list of MATERIAS.</returns>
         [HttpGet]
         public HttpResponseMessage Get(int id)
@@ -38,7 +39,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!materias.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron materias");
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron submaterias.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, materias);

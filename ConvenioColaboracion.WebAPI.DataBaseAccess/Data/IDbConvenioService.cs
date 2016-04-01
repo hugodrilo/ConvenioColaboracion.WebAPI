@@ -52,5 +52,11 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         /// </summary>
         /// <returns> The list of PARTES.</returns>
         IEnumerable<EParte> GetParte();
+
+        /// <summary>
+        /// Gets the TIPO area list from the database. 
+        /// </summary>
+        /// <returns>The list of TIPO areas.</returns>
+        IEnumerable<ETipoArea> GetTipoArea();
     }
 }

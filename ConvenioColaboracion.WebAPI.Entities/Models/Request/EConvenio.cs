@@ -168,5 +168,11 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// </summary>
         /// <value> The COMPROMISOS list.</value>
         public IEnumerable<ECompromiso> Compromisos { get; set; }
+
+        /// <summary>
+        /// Gets or sets the COMENTARIOS.
+        /// </summary>
+        /// <value> The COMENTARIOS.</value>
+        public string Comentarios { get; set; }
     }
 }

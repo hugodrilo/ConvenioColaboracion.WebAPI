@@ -81,7 +81,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody] EConvenio convenioRequest)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 if (convenioRequest == null)
                 {
@@ -94,7 +94,10 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
                     var copied = CopyDocument(convenioRequest.Documento, finalPath);
 
-                    convenioRequest.RutaDocumento = finalPath;
+                    if (copied)
+                    {
+                        convenioRequest.RutaDocumento = finalPath;
+                    }
                 }
 
                 // Call the data service
@@ -108,7 +111,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.Created, "Convenio insertado.");
             }
 
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
         }
 
         /// <summary>
@@ -119,9 +122,8 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         [HttpPut]
         public HttpResponseMessage Put([FromBody] EConvenio convenioRequest)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-
                 if (convenioRequest == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
@@ -138,7 +140,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.Created, "Convenio Actualizado.");
             }
 
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
         }
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         [HttpDelete]
         public HttpResponseMessage Delete([FromBody] EConvenio convenioRequest)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 if (convenioRequest == null)
                 {
@@ -167,7 +169,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.Created, "Convenio Eliminado.");
             }
 
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, this.ModelState);
         }
 
         #region AuxiliarMethods

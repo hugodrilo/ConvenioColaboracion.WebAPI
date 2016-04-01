@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Request\ETipoArea.cs" />
     <Compile Include="Models\Request\EArea.cs" />
+    <Compile Include="Models\Request\EConvenioArea.cs" />
     <Compile Include="Models\Request\EMateria.cs" />
     <Compile Include="Models\Request\EConvenioParte.cs" />
     <Compile Include="Models\Request\EParte.cs" />

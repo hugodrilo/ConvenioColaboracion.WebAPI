@@ -705,6 +705,68 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             return parteList;
         }
 
+        /// <summary>
+        /// Gets the TIPO area list from the database. 
+        /// </summary>
+        /// <returns>The list of TIPO areas.</returns>
+        public IEnumerable<ETipoArea> GetTipoArea()
+        {
+            // The expected model list.
+            var tipoAreaList = new List<ETipoArea>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_TIPO_AREA_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var tipoArea = new ETipoArea();
+
+                                        tipoArea.TipoAreaId = reader["ID_TIPO_AREA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_TIPO_AREA"]);
+                                        tipoArea.TipoArea = reader["TIPO_AREA"] is DBNull ? string.Empty : Convert.ToString(reader["TIPO_AREA"]);
+
+                                        // Add the element to the list.
+                                        tipoAreaList.Add(tipoArea);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return tipoAreaList;
+        }
+
         #endregion
 
         #region Auxiliar Methods
