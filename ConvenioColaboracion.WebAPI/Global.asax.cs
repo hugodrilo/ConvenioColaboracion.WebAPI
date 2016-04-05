@@ -28,8 +28,6 @@ namespace ConvenioColaboracion.WebAPI
                 container.RegisterApiControllers();
                 container.EnableWebApi(GlobalConfiguration.Configuration);
 
-                //// TODO: Register the core utility for copy files to the server
-
                 // Register all the services and implementations.
                 container.Register<IDbConvenioService, DbConvenioService>();
                 container.Register<IDatabaseHelper, DatabaseHelper>();

@@ -53,13 +53,13 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// </summary>
         /// <value> The FECHA SUSCRIPCION.</value>
         [Required(ErrorMessage = "FechaSuscripcion is required.")]
-        public DateTime FechaSuscripcion { get; set; }
+        public string FechaSuscripcion { get; set; }
 
         /// <summary>
         /// Gets or sets the FECHA TERMINO.
         /// </summary>
         /// <value> The FECHA TERMINO.</value>
-        public DateTime? FechaTermino { get; set; }
+        public string FechaTermino { get; set; }
 
         /// <summary>
         /// Gets or sets the MATERIA identifier.
@@ -73,13 +73,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// </summary>
         /// <value>The SUBMATERIA identifier.</value>
         public int? SubmateriaId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the AREA VINCULANTE identifier.
-        /// </summary>
-        /// <value>The AREA VINCULANTE identifier.</value>
-        [Required(ErrorMessage = "AreaVinculanteId is required.")]
-        public int? AreaVinculanteId { get; set; }
 
         /// <summary>
         /// Gets or sets the SEXENIO identifier.
@@ -155,6 +148,18 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public string RutaDocumento { get; set; }
 
         /// <summary>
+        /// Gets or sets the COMENTARIOS.
+        /// </summary>
+        /// <value> The COMENTARIOS.</value>
+        public string Comentarios { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CONVENIO AREA.
+        /// </summary>
+        /// <value> The CONVENIO AREA list.</value>
+        public IEnumerable<EConvenioArea> Areas { get; set; }
+
+        /// <summary>
         /// Gets or sets the CONVENIO PARTE.
         /// </summary>
         /// <value> The CONVENIO PARTE list.</value>
@@ -163,13 +168,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <summary>
         /// Gets or sets the COMPROMISOS.
         /// </summary>
-        /// <value> The COMPROMISOS list.</value>
+        /// <value> The COMPROMISOS list.</value> 
         public IEnumerable<ECompromiso> Compromisos { get; set; }
-
-        /// <summary>
-        /// Gets or sets the COMENTARIOS.
-        /// </summary>
-        /// <value> The COMENTARIOS.</value>
-        public string Comentarios { get; set; }
     }
 }

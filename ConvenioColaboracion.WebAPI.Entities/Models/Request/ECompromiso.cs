@@ -7,7 +7,7 @@
 
 namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
 {
-    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -44,14 +44,14 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the FECHA COMPROMISO date.
         /// </summary>
         /// <value> The FECHA COMPROMISO date.</value>
-        public DateTime? FechaCompromiso { get; set; }
+        public string FechaCompromiso { get; set; }
 
-        /// <summary>
-        /// Gets or sets the AREA VINCULANTE text.
-        /// </summary>
-        /// <value> The AREA VINCULANTE text.</value>
-        [Required(ErrorMessage = "AreaVinculante is required.")]
-        public string AreaVinculante { get; set; }
+        /////// <summary>
+        /////// Gets or sets the AREA VINCULANTE text.
+        /////// </summary>
+        /////// <value> The AREA VINCULANTE text.</value>
+        ////[Required(ErrorMessage = "AreaVinculante is required.")]
+        ////public string AreaVinculante { get; set; }
 
         /// <summary>
         /// Gets or sets the AVANCE overall percentage.
@@ -65,16 +65,22 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <value>The PONDERACION percentage.</value>
         public int? Ponderacion { get; set; }
 
-        /// <summary>
-        /// Gets or sets the AREA VINCULANTE identifier.
-        /// </summary>
-        /// <value> The AREA VINCULANTE identifier.</value>
-        public int? AreaVinculanteId { get; set; }
+        /////// <summary>
+        /////// Gets or sets the AREA VINCULANTE identifier.
+        /////// </summary>
+        /////// <value> The AREA VINCULANTE identifier.</value>
+        ////public int? AreaVinculanteId { get; set; }
 
         /// <summary>
         /// Gets or sets the INSTITUCION identifier.
         /// </summary>
         /// <value> The INSTITUCION identifier.</value>
         public int? InstitucionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CONVENIO AREA.
+        /// </summary>
+        /// <value> The CONVENIO AREA list.</value>
+        public IEnumerable<EArea> Area { get; set; }
     }
 }
