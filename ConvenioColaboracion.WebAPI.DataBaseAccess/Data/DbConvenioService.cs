@@ -103,6 +103,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Execute the stored procedure.
                         command.ExecuteNonQuery();
 
+                        // Get the inserted identifier.
                         var convenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
                                                  ((IDataParameter)command.Parameters["convenioId"]).Value == null
                                                  ? 0
@@ -288,7 +289,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, request.FechaTermino));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("submateriaId", OracleDbType.Int32, request.SubmateriaId));
-                        ////command.Parameters.Add(this.databaseHelper.CreateParameter("areaVinculanteId", OracleDbType.Int32, request.AreaVinculanteId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("sexenioId", OracleDbType.Int32, request.SexenioId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("año", OracleDbType.Int32, request.Año));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaActualizacion", OracleDbType.Date, request.FechaActualizacion));
@@ -852,8 +852,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             convenio.Resumen = reader["RESUMEN"] is DBNull ? string.Empty : Convert.ToString(reader["RESUMEN"]);
             convenio.FechaSuscripcion = reader["FECHA_SUSCRIPCION"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_SUSCRIPCION"]);
             convenio.FechaTermino = reader["FECHA_TERMINO"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_TERMINO"]);
-            ////convenio.FechaSuscripcion = reader["FECHA_SUSCRIPCION"] is DBNull ? DateTime.MinValue : Convert.ToDateTime(reader["FECHA_SUSCRIPCION"]);
-            ////convenio.FechaTermino = reader["FECHA_TERMINO"] is DBNull ? DateTime.MinValue : Convert.ToDateTime(reader["FECHA_TERMINO"]);
             convenio.MateriaId = reader["ID_MATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_MATERIA"]);
             convenio.SubmateriaId = reader["ID_SUBMATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_SUBMATERIA"]);
             convenio.SexenioId = reader["SEXENIO"] is DBNull ? 0 : Convert.ToInt32(reader["SEXENIO"]);
