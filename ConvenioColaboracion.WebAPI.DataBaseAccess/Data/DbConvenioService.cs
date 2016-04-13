@@ -685,6 +685,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                         area.Ramo = reader["RAMO"] is DBNull ? 0 : Convert.ToInt32(reader["RAMO"]);
                                         area.Ur = reader["UR"] is DBNull ? string.Empty : Convert.ToString(reader["UR"]);
                                         area.Area = reader["AREA"] is DBNull ? string.Empty : Convert.ToString(reader["AREA"]);
+                                        area.Selected = !(reader["SELECTED"] is DBNull) && Convert.ToBoolean(reader["SELECTED"]);
 
                                         // Add the element to the list.
                                         areaList.Add(area);

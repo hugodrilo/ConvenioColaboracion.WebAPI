@@ -27,13 +27,19 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <summary>
         /// Gets or sets the UR text.
         /// </summary>
-        /// <value> The UR text.</value>
+        /// <value>The UR text.</value>
         public string Ur { get; set; }
 
         /// <summary>
         /// Gets or sets the area text.
         /// </summary>
-        /// <value> The area text.</value>
+        /// <value>The area text.</value>
         public string Area { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected flag.
+        /// </summary>
+        /// <value>The selected flag.</value>
+        public bool Selected { get; set; }
     }
 }
