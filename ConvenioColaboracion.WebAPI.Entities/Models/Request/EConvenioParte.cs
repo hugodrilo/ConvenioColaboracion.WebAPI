@@ -21,6 +21,12 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public int ConvenioId { get; set; }
 
         /// <summary>
+        /// Gets or sets the PARTE model.
+        /// </summary>
+        /// <value>The PARTE model.</value>
+        public EParte Parte { get; set; }
+
+        /// <summary>
         /// Gets or sets the PARTE identifier.
         /// </summary>
         /// <value>The PARTE identifier.</value>

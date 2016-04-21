@@ -28,10 +28,16 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public int? ConvenioId { get; set; }
 
         /// <summary>
-        /// Gets or sets the PARTES text.
+        /// Gets or sets the PARTE model.
         /// </summary>
-        /// <value>The PARTES text.</value>
-        public string Partes { get; set; }
+        /// <value>The PARTE model.</value>
+        public EParte Parte { get; set; }
+
+        /////// <summary>
+        /////// Gets or sets the PARTES text.
+        /////// </summary>
+        /////// <value>The PARTES text.</value>
+        ////public string Partes { get; set; }
 
         /// <summary>
         /// Gets or sets the PARTES text.
@@ -46,13 +52,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <value> The FECHA COMPROMISO date.</value>
         public string FechaCompromiso { get; set; }
 
-        /////// <summary>
-        /////// Gets or sets the AREA VINCULANTE text.
-        /////// </summary>
-        /////// <value> The AREA VINCULANTE text.</value>
-        ////[Required(ErrorMessage = "AreaVinculante is required.")]
-        ////public string AreaVinculante { get; set; }
-
         /// <summary>
         /// Gets or sets the AVANCE overall percentage.
         /// </summary>
@@ -65,12 +64,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <value>The PONDERACION percentage.</value>
         public int? Ponderacion { get; set; }
 
-        /////// <summary>
-        /////// Gets or sets the AREA VINCULANTE identifier.
-        /////// </summary>
-        /////// <value> The AREA VINCULANTE identifier.</value>
-        ////public int? AreaVinculanteId { get; set; }
-
         /// <summary>
         /// Gets or sets the INSTITUCION identifier.
         /// </summary>
@@ -81,6 +74,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the CONVENIO AREA.
         /// </summary>
         /// <value> The CONVENIO AREA list.</value>
-        public IEnumerable<EArea> Area { get; set; }
+        public IEnumerable<EArea> Areas { get; set; }
     }
 }

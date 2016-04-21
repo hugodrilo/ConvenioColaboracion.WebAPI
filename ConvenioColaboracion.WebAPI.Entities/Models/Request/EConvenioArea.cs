@@ -19,10 +19,22 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public int ConvenioId { get; set; }
 
         /// <summary>
+        /// Gets or sets the AREA model.
+        /// </summary>
+        /// <value>The AREA model.</value>
+        public EArea Area { get; set; }
+
+        /// <summary>
         /// Gets or sets the AREA identifier.
         /// </summary>
         /// <value>The AREA identifier.</value>
         public int AreaId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TIPOAREA model.
+        /// </summary>
+        /// <value>The TIPOAREA model.</value>
+        public ETipoArea TipoArea { get; set; }
 
         /// <summary>
         /// Gets or sets the TIPOAREA identifier.

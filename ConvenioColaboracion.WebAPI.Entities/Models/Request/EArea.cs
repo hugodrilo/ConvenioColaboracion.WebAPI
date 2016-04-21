@@ -37,7 +37,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public string Area { get; set; }
 
         /// <summary>
-        /// Gets or sets the selected flag.
+        /// Gets or sets a value indicating whether the selected flag is true or false.
         /// </summary>
         /// <value>The selected flag.</value>
         public bool Selected { get; set; }
