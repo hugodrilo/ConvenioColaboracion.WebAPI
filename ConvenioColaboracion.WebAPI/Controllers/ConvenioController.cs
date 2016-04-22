@@ -130,6 +130,19 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
                 }
 
+                // Update the document.
+                if (!string.IsNullOrWhiteSpace(convenioRequest.Documento))
+                {
+                    var finalPath = GetDocumentPath(convenioRequest.NombreDocumento);
+
+                    var copied = CopyDocument(convenioRequest.Documento, finalPath);
+
+                    if (copied)
+                    {
+                        convenioRequest.RutaDocumento = finalPath;
+                    }
+                }
+
                 // Call the data service
                 var result = this.DbConvenioService.Update(convenioRequest);
 

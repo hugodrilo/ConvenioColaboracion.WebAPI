@@ -292,8 +292,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, request.FechaTermino));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("submateriaId", OracleDbType.Int32, request.Submateria.MateriaId));
-                        ////command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.MateriaId));
-                        ////command.Parameters.Add(this.databaseHelper.CreateParameter("submateriaId", OracleDbType.Int32, request.SubmateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("sexenioId", OracleDbType.Int32, request.SexenioId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("año", OracleDbType.Int32, request.Año));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaActualizacion", OracleDbType.Date, request.FechaActualizacion));
@@ -314,6 +312,27 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         if (isUpdated > 0)
                         {
+                            // TODO: UPDATE THE AREAS
+                            /* USP_CONVENIO_AREA_UPDATE
+                               USP_CONVENIO_AREA_DELETE*/
+
+                            // TODO: UPDATE THE PARTES
+                            /* USP_CONVENIO_PARTE_UPDATE
+                               USP_CONVENIO_PARTE_DELETE
+                            */
+
+                            // TODO: UPDATE THE COMPROMISOS Y REVISAR LOS CAMPOS DE AUDITORIA
+                            /* USP_COMPROMISO_UPDATE
+                               USP_COMPROMISO_DELETE
+                                
+                               // TODO: REVISAR SI ES NECESARIO ACTUALIZAR O ES MAS FACIL ELIMINAR LAS TABLAS INTERMEDIAS                               
+                               USP_COMPROMISO_PARTE_UPDATE
+                               USP_COMPROMISO_PARTE_DELETE
+
+                               USP_COMPROMISO_AREA_UPDATE
+                               USP_COMPROMISO_AREA_DELETE
+                            */
+
                             result = true;
                             transaction.Commit();
                         }
@@ -635,7 +654,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                         // Add the PARTE model
                                         convenioCompromiso.Parte = new EParte();
 
-
                                         // Create database command object.
                                         using (var commandCompromisoParte = this.databaseHelper.CreateStoredProcDbCommand(CompromisoParteStoredProcedureName, connection))
                                         {
@@ -662,6 +680,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                                     parte.EntidadId = readerCompromisoParte["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(readerCompromisoParte["ID_ENTIDAD"]);
                                                     parte.GobiernoId = readerCompromisoParte["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(readerCompromisoParte["ID_GOBIERNO"]);
 
+                                                    // Add the PARTE to the CONVENIO
                                                     convenioCompromiso.Parte = parte;
                                                 }
                                             }
@@ -709,7 +728,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                         compromisos.Add(convenioCompromiso);
                                     }
 
-                                    // Add the COMPROMISO to de CONVENIO.
+                                    // Add the COMPROMISO to the CONVENIO.
                                     convenio.Compromisos = compromisos;
                                 }
                             }
