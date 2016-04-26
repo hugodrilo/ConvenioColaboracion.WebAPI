@@ -71,20 +71,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the SUBMATERIA.
         /// </summary>
         /// <value>The MATERIA model.</value>
-        public EMateria Submateria { get; set; }
-
-        /////// <summary>
-        /////// Gets or sets the MATERIA identifier.
-        /////// </summary>
-        /////// <value>The MATERIA identifier.</value>
-        ////[Required(ErrorMessage = "MateriaId is required.")]
-        ////public int MateriaId { get; set; }
-
-        /////// <summary>
-        /////// Gets or sets the SUBMATERIA identifier.
-        /////// </summary>
-        /////// <value>The SUBMATERIA identifier.</value>
-        ////public int? SubmateriaId { get; set; }
+        public EMateria SubMateria { get; set; }
 
         /// <summary>
         /// Gets or sets the SEXENIO identifier.

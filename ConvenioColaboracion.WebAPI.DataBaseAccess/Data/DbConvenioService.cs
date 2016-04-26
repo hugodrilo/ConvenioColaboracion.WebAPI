@@ -88,7 +88,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("submateriaId", OracleDbType.Int32, request.Submateria.MateriaId));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("sexenioId", OracleDbType.Int32, request.SexenioId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("año", OracleDbType.Int32, request.Año));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaCreacion", OracleDbType.Date, request.FechaCreacion));
@@ -103,133 +103,22 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Execute the stored procedure.
                         command.ExecuteNonQuery();
 
-                        // Get the inserted identifier.
-                        var convenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
+                        // Get the inserted convenio identifier.
+                        request.ConvenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
                                                  ((IDataParameter)command.Parameters["convenioId"]).Value == null
                                                  ? 0
                                                  : Convert.ToInt32(((IDataParameter)command.Parameters["convenioId"]).Value.ToString());
 
-                        if (convenioId > 0)
+                        if (request.ConvenioId > 0)
                         {
-                            // The SQL stored procedure name.
-                            const string AreaStoredProcedure = @"USP_CONVENIO_AREA_INSERT";
+                            // Insert convenio Area
+                            this.InsertConvenioArea(request, connection);
 
-                            foreach (var convenioArea in request.Areas)
-                            {
-                                // Create database command object.
-                                using (var commandArea = this.databaseHelper.CreateStoredProcDbCommand(AreaStoredProcedure, connection))
-                                {
-                                    // Clear the parameters.
-                                    commandArea.Parameters.Clear();
+                            // Insert convenio parte
+                            this.InsertConvenioParte(request, connection);
 
-                                    // Add the parameters to the list.
-                                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
-                                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("areaId", OracleDbType.Int32, convenioArea.AreaId));
-                                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("tipoAreaId", OracleDbType.Int32, convenioArea.TipoAreaId));
-                                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
-
-                                    // Execute the stored procedure.
-                                    commandArea.ExecuteNonQuery();
-                                }
-                            }
-
-                            // The SQL stored procedure name.
-                            const string ParteStoredProcedure = @"USP_CONVENIO_PARTE_INSERT";
-
-                            foreach (var convenioParte in request.Partes)
-                            {
-                                // Create database command object.
-                                using (var commandParte = this.databaseHelper.CreateStoredProcDbCommand(ParteStoredProcedure, connection))
-                                {
-                                    // Clear the parameters.
-                                    commandParte.Parameters.Clear();
-
-                                    // Add the parameters to the list.
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, convenioParte.ParteId));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("representante", OracleDbType.Varchar2, convenioParte.Representante));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("telefonos", OracleDbType.Varchar2, convenioParte.Telefono));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("eMail", OracleDbType.Varchar2, convenioParte.CorreoElectronico));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("domicilio", OracleDbType.Varchar2, convenioParte.Domicilio));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("cargo", OracleDbType.Varchar2, convenioParte.Cargo));
-                                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
-
-                                    // Execute the stored procedure.
-                                    commandParte.ExecuteNonQuery();
-                                }
-                            }
-
-                            // The SQL stored procedure name.
-                            const string CompromisoStoredProcedure = @"USP_CONVENIO_COMPROMISO_INSERT";
-
-                            foreach (var compromiso in request.Compromisos)
-                            {
-                                // Create database command object.
-                                using (var commandCompromiso = this.databaseHelper.CreateStoredProcDbCommand(CompromisoStoredProcedure, connection))
-                                {
-                                    // Clear the parameters.
-                                    commandCompromiso.Parameters.Clear();
-
-                                    var fechaCompromiso = !string.IsNullOrEmpty(compromiso.FechaCompromiso)
-                                        ? DateTime.ParseExact(compromiso.FechaCompromiso, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
-                                        : DateTime.MinValue;
-
-                                    // Add the parameters to the list.
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromiso", OracleDbType.Varchar2, compromiso.Compromiso));
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("fechaCompromiso", OracleDbType.Date, fechaCompromiso));
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, compromiso.Avance));
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("ponderacion", OracleDbType.Int32, compromiso.Ponderacion));
-                                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, 0, ParameterDirection.Output));
-
-                                    commandCompromiso.ExecuteNonQuery();
-
-                                    var compromisoId = ((IDataParameter)commandCompromiso.Parameters["compromisoId"]).Value == DBNull.Value ||
-                                                             ((IDataParameter)commandCompromiso.Parameters["compromisoId"]).Value == null
-                                                             ? 0
-                                                             : Convert.ToInt32(((IDataParameter)commandCompromiso.Parameters["compromisoId"]).Value.ToString());
-
-                                    // The SQL stored procedure name.
-                                    const string CompromisoParteStoredProcedure = @"USP_COMPROMISO_PARTE_INSERT";
-
-                                    // Insertar compromiso area aqui 
-
-                                    // Create database command object.
-                                    using (var commandCompromisoParte = this.databaseHelper.CreateStoredProcDbCommand(CompromisoParteStoredProcedure, connection))
-                                    {
-                                        // Clear the parameters.
-                                        commandCompromisoParte.Parameters.Clear();
-
-                                        commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, compromisoId));
-                                        commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, compromiso.Parte.ParteId));
-                                        commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
-
-                                        // Execute the stored procedure.
-                                        commandCompromisoParte.ExecuteNonQuery();
-                                    }
-
-                                    // The SQL stored procedure name.
-                                    const string CompromisoAreaStoredProcedure = @"USP_COMPROMISO_AREA_INSERT";
-
-                                    // Insertar compromiso area aqui 
-                                    foreach (var compromisoArea in compromiso.Areas ?? new List<EArea>())
-                                    {
-                                        // Create database command object.
-                                        using (var commandCompromisoArea = this.databaseHelper.CreateStoredProcDbCommand(CompromisoAreaStoredProcedure, connection))
-                                        {
-                                            // Clear the parameters.
-                                            commandCompromisoArea.Parameters.Clear();
-
-                                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, compromisoId));
-                                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("areaId", OracleDbType.Int32, compromisoArea.AreaId));
-                                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
-
-                                            // Execute the stored procedure.
-                                            commandCompromisoArea.ExecuteNonQuery();
-                                        }
-                                    }
-                                }
-                            }
+                            // Insert convenio compromiso
+                            this.InsertConvenioCompromiso(request, connection);
 
                             result = true;
                             transaction.Commit();
@@ -277,6 +166,15 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                     // Create database command object.
                     using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
                     {
+                        // Convert string dates to datetime format.
+                        var fechaSuscripcion = !string.IsNullOrEmpty(request.FechaSuscripcion) ?
+                            DateTime.ParseExact(request.FechaSuscripcion, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) :
+                            DateTime.MinValue;
+
+                        var fechaTermino = !string.IsNullOrEmpty(request.FechaTermino) ?
+                            DateTime.ParseExact(request.FechaTermino, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) :
+                            DateTime.MinValue;
+
                         command.Transaction = transaction;
 
                         // Clear the parameters.
@@ -285,21 +183,15 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Add the parameters to the list.
                         command.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("numeroConvenio", OracleDbType.Varchar2, request.NumeroConvenio));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("convenio", OracleDbType.Varchar2, request.Convenio));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("nombreCorto", OracleDbType.Varchar2, request.NombreCorto));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("resumen", OracleDbType.Varchar2, request.Resumen));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, request.FechaSuscripcion));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, request.FechaTermino));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("convenioText", OracleDbType.Varchar2, request.Convenio));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("resumenText", OracleDbType.Varchar2, request.Resumen));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("submateriaId", OracleDbType.Int32, request.Submateria.MateriaId));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("sexenioId", OracleDbType.Int32, request.SexenioId));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("año", OracleDbType.Int32, request.Año));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaActualizacion", OracleDbType.Date, request.FechaActualizacion));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("usuarioActualizacion", OracleDbType.Varchar2, request.UsuarioActualizacion));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaUltimaActividad", OracleDbType.Date, request.FechaUltimaActividad));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, request.Avance));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("estatus", OracleDbType.Char, request.Estatus));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("rutaDocumento", OracleDbType.Varchar2, request.RutaDocumento));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("comentariosText", OracleDbType.Varchar2, request.Comentarios));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
 
                         // Execute the stored procedure.
@@ -312,26 +204,15 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         if (isUpdated > 0)
                         {
-                            // TODO: UPDATE THE AREAS
-                            /* USP_CONVENIO_AREA_UPDATE
-                               USP_CONVENIO_AREA_DELETE*/
+                            // Delete
+                            this.DeleteConvenioParte(request, connection);
+                            this.DeleteConvenioArea(request, connection);
+                            this.DeleteConvenioCompromiso(request, connection);
 
-                            // TODO: UPDATE THE PARTES
-                            /* USP_CONVENIO_PARTE_UPDATE
-                               USP_CONVENIO_PARTE_DELETE
-                            */
-
-                            // TODO: UPDATE THE COMPROMISOS Y REVISAR LOS CAMPOS DE AUDITORIA
-                            /* USP_COMPROMISO_UPDATE
-                               USP_COMPROMISO_DELETE
-                                
-                               // TODO: REVISAR SI ES NECESARIO ACTUALIZAR O ES MAS FACIL ELIMINAR LAS TABLAS INTERMEDIAS                               
-                               USP_COMPROMISO_PARTE_UPDATE
-                               USP_COMPROMISO_PARTE_DELETE
-
-                               USP_COMPROMISO_AREA_UPDATE
-                               USP_COMPROMISO_AREA_DELETE
-                            */
+                            // Insert
+                            this.InsertConvenioArea(request, connection);
+                            this.InsertConvenioParte(request, connection);
+                            this.InsertConvenioCompromiso(request, connection);
 
                             result = true;
                             transaction.Commit();
@@ -1067,7 +948,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return tipoAreaList;
         }
-
         #endregion
 
         #region Auxiliar Methods
@@ -1088,9 +968,9 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             convenio.FechaSuscripcion = reader["FECHA_SUSCRIPCION"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_SUSCRIPCION"]);
             convenio.FechaTermino = reader["FECHA_TERMINO"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_TERMINO"]);
             convenio.Materia = new EMateria();
-            convenio.Submateria = new EMateria();
+            convenio.SubMateria = new EMateria();
             convenio.Materia.MateriaId = reader["ID_MATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_MATERIA"]);
-            convenio.Submateria.MateriaId = reader["ID_SUBMATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_SUBMATERIA"]);
+            convenio.SubMateria.MateriaId = reader["ID_SUBMATERIA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_SUBMATERIA"]);
             convenio.SexenioId = reader["SEXENIO"] is DBNull ? 0 : Convert.ToInt32(reader["SEXENIO"]);
             convenio.Año = reader["AÑO"] is DBNull ? 0 : Convert.ToInt32(reader["AÑO"]);
             convenio.FechaCreacion = reader["FECHA_CREACION"] is DBNull ? DateTime.MinValue : Convert.ToDateTime(reader["FECHA_CREACION"]);
@@ -1104,6 +984,332 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             convenio.Comentarios = reader["COMENTARIOS"] is DBNull ? string.Empty : Convert.ToString(reader["COMENTARIOS"]);
 
             return convenio;
+        }
+
+        /// <summary>
+        /// Inserts the CONVENIO Area.
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A value indicating whether the value was inserted or not.</returns>
+        private bool InsertConvenioArea(EConvenio request, IDbConnection connection)
+        {
+            var inserted = false;
+
+            // The SQL stored procedure name.
+            const string ConvenioAreaInsert = @"USP_CONVENIO_AREA_INSERT";
+
+            foreach (var convenioArea in request.Areas)
+            {
+                // Create database command object.
+                using (var commandArea = this.databaseHelper.CreateStoredProcDbCommand(ConvenioAreaInsert, connection))
+                {
+                    // Clear the parameters.
+                    commandArea.Parameters.Clear();
+
+                    // Add the parameters to the list.
+                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
+                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("areaId", OracleDbType.Int32, convenioArea.AreaId));
+                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("tipoAreaId", OracleDbType.Int32, convenioArea.TipoAreaId));
+                    commandArea.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                    // Execute the stored procedure.
+                    commandArea.ExecuteNonQuery();
+
+                    var affected = ((IDataParameter)commandArea.Parameters["affectedRows"]).Value == DBNull.Value ||
+                         ((IDataParameter)commandArea.Parameters["affectedRows"]).Value == null
+                         ? 0
+                         : Convert.ToInt32(((IDataParameter)commandArea.Parameters["affectedRows"]).Value.ToString());
+
+                    if (affected > 0)
+                    {
+                        inserted = true;
+                    }
+                }
+            }
+
+            return inserted;
+        }
+
+        /// <summary>
+        /// Deletes the CONVENIO Area.
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A value indicating whether the value was deleted or not.</returns>
+        private bool DeleteConvenioArea(EConvenio request, IDbConnection connection)
+        {
+            var deleted = false;
+
+            // The SQL stored procedure name.
+            const string ConvenioAreaDelete = @"USP_CONVENIO_AREA_DELETE";
+
+            // Create database command object.
+            using (var commandArea = this.databaseHelper.CreateStoredProcDbCommand(ConvenioAreaDelete, connection))
+            {
+                // Clear the parameters.
+                commandArea.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandArea.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
+                commandArea.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                // Execute the stored procedure.
+                commandArea.ExecuteNonQuery();
+
+                var affected = ((IDataParameter)commandArea.Parameters["affectedRows"]).Value == DBNull.Value ||
+                     ((IDataParameter)commandArea.Parameters["affectedRows"]).Value == null
+                     ? 0
+                     : Convert.ToInt32(((IDataParameter)commandArea.Parameters["affectedRows"]).Value.ToString());
+
+                if (affected > 0)
+                {
+                    deleted = true;
+                }
+            }
+
+            return deleted;
+        }
+
+        /// <summary>
+        /// Inserts the CONVENIO PARTE.
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A value indicating whether the value was inserted or not.</returns>
+        private bool InsertConvenioParte(EConvenio request, IDbConnection connection)
+        {
+            var inserted = false;
+
+            // The SQL stored procedure name.
+            const string ConvenioParteInsert = @"USP_CONVENIO_PARTE_INSERT";
+
+            foreach (var convenioParte in request.Partes)
+            {
+                // Create database command object.
+                using (var commandParte = this.databaseHelper.CreateStoredProcDbCommand(ConvenioParteInsert, connection))
+                {
+                    // Clear the parameters.
+                    commandParte.Parameters.Clear();
+
+                    // Add the parameters to the list.
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, convenioParte.ParteId));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("representante", OracleDbType.Varchar2, convenioParte.Representante));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("telefonos", OracleDbType.Varchar2, convenioParte.Telefono));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("eMail", OracleDbType.Varchar2, convenioParte.CorreoElectronico));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("domicilio", OracleDbType.Varchar2, convenioParte.Domicilio));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("cargo", OracleDbType.Varchar2, convenioParte.Cargo));
+                    commandParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                    // Execute the stored procedure.
+                    commandParte.ExecuteNonQuery();
+
+                    var affected = ((IDataParameter)commandParte.Parameters["affectedRows"]).Value == DBNull.Value ||
+                                             ((IDataParameter)commandParte.Parameters["affectedRows"]).Value == null
+                                             ? 0
+                                             : Convert.ToInt32(((IDataParameter)commandParte.Parameters["affectedRows"]).Value.ToString());
+
+                    if (affected > 0)
+                    {
+                        inserted = true;
+                    }
+                }
+            }
+
+            return inserted;
+        }
+
+        /// <summary>
+        /// Deletes the CONVENIO PARTE.
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A value indicating whether the value was deleted or not.</returns>
+        private bool DeleteConvenioParte(EConvenio request, IDbConnection connection)
+        {
+            var deleted = false;
+
+            // The SQL stored procedure name.
+            const string ConvenioParteDelete = @"USP_CONVENIO_PARTE_DELETE";
+
+            // Create database command object.
+            using (var commandParte = this.databaseHelper.CreateStoredProcDbCommand(ConvenioParteDelete, connection))
+            {
+                // Clear the parameters.
+                commandParte.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandParte.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
+                commandParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                // Execute the stored procedure.
+                commandParte.ExecuteNonQuery();
+
+                var affected = ((IDataParameter)commandParte.Parameters["affectedRows"]).Value == DBNull.Value ||
+                                         ((IDataParameter)commandParte.Parameters["affectedRows"]).Value == null
+                                         ? 0
+                                         : Convert.ToInt32(((IDataParameter)commandParte.Parameters["affectedRows"]).Value.ToString());
+
+                if (affected > 0)
+                {
+                    deleted = true;
+                }
+            }
+
+            return deleted;
+        }
+
+        /// <summary>
+        /// Inserts the CONVENIO COMPROMISO.
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A value indicating whether the value was inserted or not.</returns>
+        private bool InsertConvenioCompromiso(EConvenio request, IDbConnection connection)
+        {
+            var inserted = false;
+
+            // The SQL stored procedure name.
+            const string ConvenioCompromisoInsert = @"USP_CONVENIO_COMPROMISO_INSERT";
+
+            foreach (var compromiso in request.Compromisos)
+            {
+                // Create database command object.
+                using (var commandCompromiso = this.databaseHelper.CreateStoredProcDbCommand(ConvenioCompromisoInsert, connection))
+                {
+                    // Clear the parameters.
+                    commandCompromiso.Parameters.Clear();
+
+                    var fechaCompromiso = !string.IsNullOrEmpty(compromiso.FechaCompromiso)
+                        ? DateTime.ParseExact(compromiso.FechaCompromiso, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                        : DateTime.MinValue;
+
+                    // Add the parameters to the list.
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromiso", OracleDbType.Varchar2, compromiso.Compromiso));
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("fechaCompromiso", OracleDbType.Date, fechaCompromiso));
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, compromiso.Avance));
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("ponderacion", OracleDbType.Int32, compromiso.Ponderacion));
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                    commandCompromiso.ExecuteNonQuery();
+
+                    compromiso.CompromisoId = ((IDataParameter)commandCompromiso.Parameters["compromisoId"]).Value == DBNull.Value ||
+                                             ((IDataParameter)commandCompromiso.Parameters["compromisoId"]).Value == null
+                                             ? 0
+                                             : Convert.ToInt32(((IDataParameter)commandCompromiso.Parameters["compromisoId"]).Value.ToString());
+
+                    if (compromiso.CompromisoId > 0)
+                    {
+                        // The SQL stored procedure name.
+                        const string CompromisoParteInsert = @"USP_COMPROMISO_PARTE_INSERT";
+
+                        // Create database command object.
+                        using (var commandCompromisoParte = this.databaseHelper.CreateStoredProcDbCommand(CompromisoParteInsert, connection))
+                        {
+                            // Clear the parameters.
+                            commandCompromisoParte.Parameters.Clear();
+
+                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, compromiso.CompromisoId));
+                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("parteId", OracleDbType.Int32, compromiso.Parte.ParteId));
+                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                            // Execute the stored procedure.
+                            commandCompromisoParte.ExecuteNonQuery();
+                        }
+
+                        // The SQL stored procedure name.
+                        const string CompromisoAreaInsert = @"USP_COMPROMISO_AREA_INSERT";
+
+                        // Insertar compromiso area aqui 
+                        foreach (var compromisoArea in compromiso.Areas ?? new List<EArea>())
+                        {
+                            // Create database command object.
+                            using (var commandCompromisoArea = this.databaseHelper.CreateStoredProcDbCommand(CompromisoAreaInsert, connection))
+                            {
+                                // Clear the parameters.
+                                commandCompromisoArea.Parameters.Clear();
+
+                                commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, compromiso.CompromisoId));
+                                commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("areaId", OracleDbType.Int32, compromisoArea.AreaId));
+                                commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                                // Execute the stored procedure.
+                                commandCompromisoArea.ExecuteNonQuery();
+                            }
+                        }
+
+                        inserted = true;
+                    }
+                }
+            }
+
+            return inserted;
+        }
+
+        /// <summary>
+        /// Deletes the CONVENIO COMPROMISO.
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A value indicating whether the value was deleted or not.</returns>
+        private bool DeleteConvenioCompromiso(EConvenio request, IDbConnection connection)
+        {
+            var deleted = false;
+
+            foreach (var compromiso in request.Compromisos)
+            {
+                // The SQL stored procedure name.
+                const string CompromisoParteDelete = @"USP_COMPROMISO_PARTE_DELETE";
+
+                // Create database command object.
+                using (var commandCompromisoParte = this.databaseHelper.CreateStoredProcDbCommand(CompromisoParteDelete, connection))
+                {
+                    // Clear the parameters.
+                    commandCompromisoParte.Parameters.Clear();
+
+                    commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, compromiso.CompromisoId));
+                    commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                    // Execute the stored procedure.
+                    commandCompromisoParte.ExecuteNonQuery();
+                }
+
+                // The SQL stored procedure name.
+                const string CompromisoAreaDelete = @"USP_COMPROMISO_AREA_DELETE";
+
+                // Create database command object.
+                using (var commandCompromisoArea = this.databaseHelper.CreateStoredProcDbCommand(CompromisoAreaDelete, connection))
+                {
+                    // Clear the parameters.
+                    commandCompromisoArea.Parameters.Clear();
+
+                    commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, compromiso.CompromisoId));
+                    commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                    // Execute the stored procedure.
+                    commandCompromisoArea.ExecuteNonQuery();
+                }
+            }
+
+            // The SQL stored procedure name.
+            const string ConvenioCompromisoDelete = @"USP_CONVENIO_COMPROMISO_DELET";
+
+            // Create database command object.
+            using (var commandCompromiso = this.databaseHelper.CreateStoredProcDbCommand(ConvenioCompromisoDelete, connection))
+            {
+                // Clear the parameters.
+                commandCompromiso.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
+                commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                commandCompromiso.ExecuteNonQuery();
+            }
+
+            return deleted;
         }
         #endregion
     }

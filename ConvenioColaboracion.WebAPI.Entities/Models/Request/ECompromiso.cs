@@ -33,12 +33,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// <value>The PARTE model.</value>
         public EParte Parte { get; set; }
 
-        /////// <summary>
-        /////// Gets or sets the PARTES text.
-        /////// </summary>
-        /////// <value>The PARTES text.</value>
-        ////public string Partes { get; set; }
-
         /// <summary>
         /// Gets or sets the PARTES text.
         /// </summary>
