@@ -11,6 +11,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data;
+    using System.Linq;
     using Entities.Models.Request;
     using Oracle.ManagedDataAccess.Client;
     using Utilities;
@@ -405,214 +406,19 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                             }
 
                             // Get the convenio areas
-                            const string ConvenioAreaStoredProcedureName = @"USP_CONVENIO_AREA_SELECT_BY_ID";
-
-                            // Create database command object.
-                            using (var commandAreas = this.databaseHelper.CreateStoredProcDbCommand(ConvenioAreaStoredProcedureName, connection))
-                            {
-                                // Clear the parameters.
-                                commandAreas.Parameters.Clear();
-
-                                // Add the parameters to the list.
-                                commandAreas.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
-                                commandAreas.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
-
-                                // Execute the reader.
-                                using (var readerAreas = commandAreas.ExecuteReader())
-                                {
-                                    var areas = new List<EConvenioArea>();
-
-                                    // Read the data rows.
-                                    while (readerAreas.Read())
-                                    {
-                                        var convenioArea = new EConvenioArea();
-
-                                        convenioArea.ConvenioId = readerAreas["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_CONVENIO"]);
-                                        convenioArea.AreaId = readerAreas["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_AREA"]);
-                                        convenioArea.TipoAreaId = readerAreas["ID_TIPO_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_TIPO_AREA"]);
-
-                                        // Fill the Area.
-                                        convenioArea.Area = new EArea();
-                                        convenioArea.Area.AreaId = readerAreas["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_AREA"]);
-                                        convenioArea.Area.Ramo = readerAreas["RAMO"] is DBNull ? (int?)null : Convert.ToInt32(readerAreas["RAMO"]);
-                                        convenioArea.Area.Ur = readerAreas["UR"] is DBNull ? string.Empty : Convert.ToString(readerAreas["UR"]);
-                                        convenioArea.Area.Area = readerAreas["AREA"] is DBNull ? string.Empty : Convert.ToString(readerAreas["AREA"]);
-
-                                        // Fill the tipo Area.
-                                        convenioArea.TipoArea = new ETipoArea();
-                                        convenioArea.TipoArea.TipoAreaId = readerAreas["ID_TIPO_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_TIPO_AREA"]);
-                                        convenioArea.TipoArea.TipoArea = readerAreas["TIPO_AREA"] is DBNull ? string.Empty : Convert.ToString(readerAreas["TIPO_AREA"]);
-
-                                        areas.Add(convenioArea);
-                                    }
-
-                                    convenio.Areas = areas;
-                                }
-                            }
+                            convenio.Areas = this.GetsConvenioArea(convenioId, connection);
 
                             // Get the convenio partes
-                            const string ConvenioParteStoredProcedureName = @"USP_CONVENIO_PARTE_SELECTBYID";
-
-                            // Create database command object.
-                            using (var commandPartes = this.databaseHelper.CreateStoredProcDbCommand(ConvenioParteStoredProcedureName, connection))
-                            {
-                                // Clear the parameters.
-                                commandPartes.Parameters.Clear();
-
-                                // Add the parameters to the list.
-                                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
-                                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
-
-                                // Execute the reader.
-                                using (var readerPartes = commandPartes.ExecuteReader())
-                                {
-                                    var partes = new List<EConvenioParte>();
-
-                                    // Read the data rows.
-                                    while (readerPartes.Read())
-                                    {
-                                        var convenioParte = new EConvenioParte();
-
-                                        convenioParte.ConvenioId = readerPartes["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_CONVENIO"]);
-                                        convenioParte.ParteId = readerPartes["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_PARTE"]);
-                                        convenioParte.Representante = readerPartes["REPRESENTANTE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["REPRESENTANTE"]);
-                                        convenioParte.Telefono = readerPartes["TELEFONOS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["TELEFONOS"]);
-                                        convenioParte.CorreoElectronico = readerPartes["EMAIL"] is DBNull ? string.Empty : Convert.ToString(readerPartes["EMAIL"]);
-                                        convenioParte.Domicilio = readerPartes["DOMICILIO"] is DBNull ? string.Empty : Convert.ToString(readerPartes["DOMICILIO"]);
-                                        convenioParte.Cargo = readerPartes["CARGO"] is DBNull ? string.Empty : Convert.ToString(readerPartes["CARGO"]);
-
-                                        // Add the PARTE model
-                                        convenioParte.Parte = new EParte();
-
-                                        convenioParte.Parte.ParteId = readerPartes["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_PARTE"]);
-                                        convenioParte.Parte.Parte = readerPartes["PARTE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["PARTE"]);
-                                        convenioParte.Parte.Clave = readerPartes["CLAVE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["CLAVE"]);
-                                        convenioParte.Parte.Siglas = readerPartes["SIGLAS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["SIGLAS"]);
-                                        convenioParte.Parte.PaisId = readerPartes["ID_PAIS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["ID_PAIS"]);
-                                        convenioParte.Parte.EntidadId = readerPartes["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_ENTIDAD"]);
-                                        convenioParte.Parte.GobiernoId = readerPartes["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(readerPartes["ID_GOBIERNO"]);
-
-                                        partes.Add(convenioParte);
-                                    }
-
-                                    convenio.Partes = partes;
-                                }
-                            }
+                            convenio.Partes = this.GetsConvenioParte(convenioId, connection);
 
                             // Get the convenio compromisos
-                            const string ConvenioCompromisoStoredProcedureName = @"USP_CONVENIO_COMPROMISO_BYID";
+                            convenio.Compromisos = this.GetsConvenioCompromiso(convenioId, connection);
 
-                            // Create database command object.
-                            using (var commandCompromiso = this.databaseHelper.CreateStoredProcDbCommand(ConvenioCompromisoStoredProcedureName, connection))
-                            {
-                                // Clear the parameters.
-                                commandCompromiso.Parameters.Clear();
+                            // Create the identifiers string 
+                            var csvIdCompromiso = string.Join(",", convenio.Compromisos.Select(m => m.CompromisoId));
 
-                                // Add the parameters to the list.
-                                commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
-                                commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
-
-                                // Execute the reader.
-                                using (var readerCompromiso = commandCompromiso.ExecuteReader())
-                                {
-                                    var compromisos = new List<ECompromiso>();
-
-                                    // Read the data rows.
-                                    while (readerCompromiso.Read())
-                                    {
-                                        var convenioCompromiso = new ECompromiso();
-
-                                        convenioCompromiso.ConvenioId = readerCompromiso["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_CONVENIO"]);
-                                        convenioCompromiso.CompromisoId = readerCompromiso["ID_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_COMPROMISO"]);
-                                        convenioCompromiso.Compromiso = readerCompromiso["COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["COMPROMISO"]);
-                                        convenioCompromiso.FechaCompromiso = readerCompromiso["FECHA_COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["FECHA_COMPROMISO"]);
-                                        convenioCompromiso.Avance = readerCompromiso["AVANCE"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["AVANCE"]);
-                                        convenioCompromiso.Ponderacion = readerCompromiso["PONDERACION"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["PONDERACION"]);
-
-                                        // Get the compromiso area
-                                        const string CompromisoParteStoredProcedureName = @"USP_COMPROMISO_PARTE_BY_ID";
-
-                                        // Add the PARTE model
-                                        convenioCompromiso.Parte = new EParte();
-
-                                        // Create database command object.
-                                        using (var commandCompromisoParte = this.databaseHelper.CreateStoredProcDbCommand(CompromisoParteStoredProcedureName, connection))
-                                        {
-                                            // Clear the parameters.
-                                            commandCompromisoParte.Parameters.Clear();
-
-                                            // Add the parameters to the list.
-                                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("idCompromiso", OracleDbType.Int32, convenioCompromiso.CompromisoId));
-                                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
-
-                                            // Execute the reader.
-                                            using (var readerCompromisoParte = commandCompromisoParte.ExecuteReader())
-                                            {
-                                                // Read the data rows.
-                                                if (readerCompromisoParte.Read())
-                                                {
-                                                    var parte = new EParte();
-
-                                                    parte.ParteId = readerCompromisoParte["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerCompromisoParte["ID_PARTE"]);
-                                                    parte.Parte = readerCompromisoParte["PARTE"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["PARTE"]);
-                                                    parte.Clave = readerCompromisoParte["CLAVE"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["CLAVE"]);
-                                                    parte.Siglas = readerCompromisoParte["SIGLAS"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["SIGLAS"]);
-                                                    parte.PaisId = readerCompromisoParte["ID_PAIS"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["ID_PAIS"]);
-                                                    parte.EntidadId = readerCompromisoParte["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(readerCompromisoParte["ID_ENTIDAD"]);
-                                                    parte.GobiernoId = readerCompromisoParte["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(readerCompromisoParte["ID_GOBIERNO"]);
-
-                                                    // Add the PARTE to the CONVENIO
-                                                    convenioCompromiso.Parte = parte;
-                                                }
-                                            }
-                                        }
-
-                                        // Get the compromiso area
-                                        const string CompromisoAreaStoredProcedureName = @"USP_COMPROMISO_AREA_BY_ID";
-
-                                        // Create database command object.
-                                        using (var commandCompromisoArea = this.databaseHelper.CreateStoredProcDbCommand(CompromisoAreaStoredProcedureName, connection))
-                                        {
-                                            // Clear the parameters.
-                                            commandCompromisoArea.Parameters.Clear();
-
-                                            // Add the parameters to the list.
-                                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("idCompromiso", OracleDbType.Int32, convenioCompromiso.CompromisoId));
-                                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
-
-                                            // Execute the reader.
-                                            using (var dataReader = commandCompromisoArea.ExecuteReader())
-                                            {
-                                                var areasCompromiso = new List<EArea>();
-
-                                                // Read the data rows.
-                                                while (dataReader.Read())
-                                                {
-                                                    var area = new EArea();
-
-                                                    area.AreaId = dataReader["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(dataReader["ID_AREA"]);
-                                                    area.Ramo = dataReader["RAMO"] is DBNull ? 0 : Convert.ToInt32(dataReader["RAMO"]);
-                                                    area.Ur = dataReader["UR"] is DBNull ? string.Empty : Convert.ToString(dataReader["UR"]);
-                                                    area.Area = dataReader["AREA"] is DBNull ? string.Empty : Convert.ToString(dataReader["AREA"]);
-                                                    area.Selected = !(dataReader["SELECTED"] is DBNull) && Convert.ToBoolean(dataReader["SELECTED"]);
-
-                                                    // Add the area to the list.
-                                                    areasCompromiso.Add(area);
-                                                }
-
-                                                // Add all the areas to the COMPROMISO.
-                                                convenioCompromiso.Areas = areasCompromiso;
-                                            }
-                                        }
-
-                                        // Add the COMPROMISO to the list.
-                                        compromisos.Add(convenioCompromiso);
-                                    }
-
-                                    // Add the COMPROMISO to the CONVENIO.
-                                    convenio.Compromisos = compromisos;
-                                }
-                            }
+                            //// USP_PARTES_COMPROMISO
+                            convenio.PartesCompromiso = this.GetsPartesCompromiso(csvIdCompromiso, connection);
                         }
                     }
                 }
@@ -987,6 +793,59 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         }
 
         /// <summary>
+        /// Gets the CONVENIO Area.
+        /// </summary>
+        /// <param name="convenioId">The CONVENIO identifier.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A list of CONVENIO area.</returns>
+        private IEnumerable<EConvenioArea> GetsConvenioArea(int convenioId, IDbConnection connection)
+        {
+            const string ConvenioAreaStoredProcedureName = @"USP_CONVENIO_AREA_SELECT_BY_ID";
+            var areas = new List<EConvenioArea>();
+
+            // Create database command object.
+            using (var commandAreas = this.databaseHelper.CreateStoredProcDbCommand(ConvenioAreaStoredProcedureName, connection))
+            {
+                // Clear the parameters.
+                commandAreas.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandAreas.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
+                commandAreas.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                // Execute the reader.
+                using (var readerAreas = commandAreas.ExecuteReader())
+                {
+                    // Read the data rows.
+                    while (readerAreas.Read())
+                    {
+                        var convenioArea = new EConvenioArea();
+
+                        convenioArea.ConvenioId = readerAreas["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_CONVENIO"]);
+                        convenioArea.AreaId = readerAreas["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_AREA"]);
+                        convenioArea.TipoAreaId = readerAreas["ID_TIPO_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_TIPO_AREA"]);
+
+                        // Fill the Area.
+                        convenioArea.Area = new EArea();
+                        convenioArea.Area.AreaId = readerAreas["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_AREA"]);
+                        convenioArea.Area.Ramo = readerAreas["RAMO"] is DBNull ? (int?)null : Convert.ToInt32(readerAreas["RAMO"]);
+                        convenioArea.Area.Ur = readerAreas["UR"] is DBNull ? string.Empty : Convert.ToString(readerAreas["UR"]);
+                        convenioArea.Area.Area = readerAreas["AREA"] is DBNull ? string.Empty : Convert.ToString(readerAreas["AREA"]);
+
+                        // Fill the tipo Area.
+                        convenioArea.TipoArea = new ETipoArea();
+                        convenioArea.TipoArea.TipoAreaId = readerAreas["ID_TIPO_AREA"] is DBNull ? 0 : Convert.ToInt32(readerAreas["ID_TIPO_AREA"]);
+                        convenioArea.TipoArea.TipoArea = readerAreas["TIPO_AREA"] is DBNull ? string.Empty : Convert.ToString(readerAreas["TIPO_AREA"]);
+
+                        areas.Add(convenioArea);
+                    }
+                }
+            }
+
+            return areas;
+        }
+
+        /// <summary>
         /// Inserts the CONVENIO Area.
         /// </summary>
         /// <param name="request">The request model.</param>
@@ -1069,6 +928,62 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             }
 
             return deleted;
+        }
+
+        /// <summary>
+        /// Gets the CONVENIO PARTE.
+        /// </summary>
+        /// <param name="convenioId">The CONVENIO identifier.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A list of CONVENIO PARTE.</returns>
+        private IEnumerable<EConvenioParte> GetsConvenioParte(int convenioId, IDbConnection connection)
+        {
+            const string ConvenioParteStoredProcedureName = @"USP_CONVENIO_PARTE_SELECTBYID";
+            var partes = new List<EConvenioParte>();
+
+            // Create database command object.
+            using (var commandPartes = this.databaseHelper.CreateStoredProcDbCommand(ConvenioParteStoredProcedureName, connection))
+            {
+                // Clear the parameters.
+                commandPartes.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
+                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                // Execute the reader.
+                using (var readerPartes = commandPartes.ExecuteReader())
+                {
+                    // Read the data rows.
+                    while (readerPartes.Read())
+                    {
+                        var convenioParte = new EConvenioParte();
+
+                        convenioParte.ConvenioId = readerPartes["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_CONVENIO"]);
+                        convenioParte.ParteId = readerPartes["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_PARTE"]);
+                        convenioParte.Representante = readerPartes["REPRESENTANTE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["REPRESENTANTE"]);
+                        convenioParte.Telefono = readerPartes["TELEFONOS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["TELEFONOS"]);
+                        convenioParte.CorreoElectronico = readerPartes["EMAIL"] is DBNull ? string.Empty : Convert.ToString(readerPartes["EMAIL"]);
+                        convenioParte.Domicilio = readerPartes["DOMICILIO"] is DBNull ? string.Empty : Convert.ToString(readerPartes["DOMICILIO"]);
+                        convenioParte.Cargo = readerPartes["CARGO"] is DBNull ? string.Empty : Convert.ToString(readerPartes["CARGO"]);
+
+                        // Add the PARTE model
+                        convenioParte.Parte = new EParte();
+
+                        convenioParte.Parte.ParteId = readerPartes["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_PARTE"]);
+                        convenioParte.Parte.Parte = readerPartes["PARTE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["PARTE"]);
+                        convenioParte.Parte.Clave = readerPartes["CLAVE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["CLAVE"]);
+                        convenioParte.Parte.Siglas = readerPartes["SIGLAS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["SIGLAS"]);
+                        convenioParte.Parte.PaisId = readerPartes["ID_PAIS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["ID_PAIS"]);
+                        convenioParte.Parte.EntidadId = readerPartes["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_ENTIDAD"]);
+                        convenioParte.Parte.GobiernoId = readerPartes["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(readerPartes["ID_GOBIERNO"]);
+
+                        partes.Add(convenioParte);
+                    }
+                }
+            }
+
+            return partes;
         }
 
         /// <summary>
@@ -1158,6 +1073,127 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             }
 
             return deleted;
+        }
+
+        /// <summary>
+        /// Gets the CONVENIO COMPROMISO.
+        /// </summary>
+        /// <param name="convenioId">The CONVENIO identifier.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A list of CONVENIO COMPROMISO.</returns>
+        private IEnumerable<ECompromiso> GetsConvenioCompromiso(int convenioId, IDbConnection connection)
+        {
+            const string ConvenioCompromisoStoredProcedureName = @"USP_CONVENIO_COMPROMISO_BYID";
+            var compromisos = new List<ECompromiso>();
+
+            // Create database command object.
+            using (var commandCompromiso = this.databaseHelper.CreateStoredProcDbCommand(ConvenioCompromisoStoredProcedureName, connection))
+            {
+                // Clear the parameters.
+                commandCompromiso.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
+                commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                // Execute the reader.
+                using (var readerCompromiso = commandCompromiso.ExecuteReader())
+                {
+                    // Read the data rows.
+                    while (readerCompromiso.Read())
+                    {
+                        var convenioCompromiso = new ECompromiso();
+
+                        convenioCompromiso.ConvenioId = readerCompromiso["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_CONVENIO"]);
+                        convenioCompromiso.CompromisoId = readerCompromiso["ID_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_COMPROMISO"]);
+                        convenioCompromiso.Compromiso = readerCompromiso["COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["COMPROMISO"]);
+                        convenioCompromiso.FechaCompromiso = readerCompromiso["FECHA_COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["FECHA_COMPROMISO"]);
+                        convenioCompromiso.Avance = readerCompromiso["AVANCE"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["AVANCE"]);
+                        convenioCompromiso.Ponderacion = readerCompromiso["PONDERACION"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["PONDERACION"]);
+
+                        // Get the compromiso area
+                        const string CompromisoParteStoredProcedureName = @"USP_COMPROMISO_PARTE_BY_ID";
+
+                        // Add the PARTE model
+                        convenioCompromiso.Parte = new EParte();
+
+                        // Create database command object.
+                        using (var commandCompromisoParte = this.databaseHelper.CreateStoredProcDbCommand(CompromisoParteStoredProcedureName, connection))
+                        {
+                            // Clear the parameters.
+                            commandCompromisoParte.Parameters.Clear();
+
+                            // Add the parameters to the list.
+                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("idCompromiso", OracleDbType.Int32, convenioCompromiso.CompromisoId));
+                            commandCompromisoParte.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                            // Execute the reader.
+                            using (var readerCompromisoParte = commandCompromisoParte.ExecuteReader())
+                            {
+                                // Read the data rows.
+                                if (readerCompromisoParte.Read())
+                                {
+                                    var parte = new EParte();
+
+                                    parte.ParteId = readerCompromisoParte["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerCompromisoParte["ID_PARTE"]);
+                                    parte.Parte = readerCompromisoParte["PARTE"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["PARTE"]);
+                                    parte.Clave = readerCompromisoParte["CLAVE"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["CLAVE"]);
+                                    parte.Siglas = readerCompromisoParte["SIGLAS"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["SIGLAS"]);
+                                    parte.PaisId = readerCompromisoParte["ID_PAIS"] is DBNull ? string.Empty : Convert.ToString(readerCompromisoParte["ID_PAIS"]);
+                                    parte.EntidadId = readerCompromisoParte["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(readerCompromisoParte["ID_ENTIDAD"]);
+                                    parte.GobiernoId = readerCompromisoParte["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(readerCompromisoParte["ID_GOBIERNO"]);
+
+                                    // Add the PARTE to the CONVENIO
+                                    convenioCompromiso.Parte = parte;
+                                }
+                            }
+                        }
+
+                        // Get the compromiso area
+                        const string CompromisoAreaStoredProcedureName = @"USP_COMPROMISO_AREA_BY_ID";
+
+                        // Create database command object.
+                        using (var commandCompromisoArea = this.databaseHelper.CreateStoredProcDbCommand(CompromisoAreaStoredProcedureName, connection))
+                        {
+                            // Clear the parameters.
+                            commandCompromisoArea.Parameters.Clear();
+
+                            // Add the parameters to the list.
+                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("idCompromiso", OracleDbType.Int32, convenioCompromiso.CompromisoId));
+                            commandCompromisoArea.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                            // Execute the reader.
+                            using (var dataReader = commandCompromisoArea.ExecuteReader())
+                            {
+                                var areasCompromiso = new List<EArea>();
+
+                                // Read the data rows.
+                                while (dataReader.Read())
+                                {
+                                    var area = new EArea();
+
+                                    area.AreaId = dataReader["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(dataReader["ID_AREA"]);
+                                    area.Ramo = dataReader["RAMO"] is DBNull ? 0 : Convert.ToInt32(dataReader["RAMO"]);
+                                    area.Ur = dataReader["UR"] is DBNull ? string.Empty : Convert.ToString(dataReader["UR"]);
+                                    area.Area = dataReader["AREA"] is DBNull ? string.Empty : Convert.ToString(dataReader["AREA"]);
+                                    area.Selected = !(dataReader["SELECTED"] is DBNull) && Convert.ToBoolean(dataReader["SELECTED"]);
+
+                                    // Add the area to the list.
+                                    areasCompromiso.Add(area);
+                                }
+
+                                // Add all the areas to the COMPROMISO.
+                                convenioCompromiso.Areas = areasCompromiso;
+                            }
+                        }
+
+                        // Add the COMPROMISO to the list.
+                        compromisos.Add(convenioCompromiso);
+                    }
+                }
+            }
+
+            return compromisos;
         }
 
         /// <summary>
@@ -1310,6 +1346,52 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             }
 
             return deleted;
+        }
+
+        /// <summary>
+        /// Gets the CONVENIO PARTE.
+        /// </summary>
+        /// <param name="compromisos">The COMPROMISOS identifier string.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns>A list of CONVENIO PARTE.</returns>
+        private IEnumerable<EParte> GetsPartesCompromiso(string compromisos, IDbConnection connection)
+        {
+            const string PartesCompromiso = @"USP_PARTES_COMPROMISO";
+            var partes = new List<EParte>();
+
+            // Create database command object.
+            using (var commandPartes = this.databaseHelper.CreateStoredProcDbCommand(PartesCompromiso, connection))
+            {
+                // Clear the parameters.
+                commandPartes.Parameters.Clear();
+
+                // Add the parameters to the list.
+                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("csvIdCompromiso", OracleDbType.Varchar2, compromisos));
+                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                // Execute the reader.
+                using (var readerPartes = commandPartes.ExecuteReader())
+                {
+                    // Read the data rows.
+                    while (readerPartes.Read())
+                    {
+                        // Add the PARTE model
+                        var parte = new EParte();
+
+                        parte.ParteId = readerPartes["ID_PARTE"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_PARTE"]);
+                        parte.Parte = readerPartes["PARTE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["PARTE"]);
+                        parte.Clave = readerPartes["CLAVE"] is DBNull ? string.Empty : Convert.ToString(readerPartes["CLAVE"]);
+                        parte.Siglas = readerPartes["SIGLAS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["SIGLAS"]);
+                        parte.PaisId = readerPartes["ID_PAIS"] is DBNull ? string.Empty : Convert.ToString(readerPartes["ID_PAIS"]);
+                        parte.EntidadId = readerPartes["ID_ENTIDAD"] is DBNull ? 0 : Convert.ToInt32(readerPartes["ID_ENTIDAD"]);
+                        parte.GobiernoId = readerPartes["ID_GOBIERNO"] is DBNull ? char.MinValue : Convert.ToChar(readerPartes["ID_GOBIERNO"]);
+
+                        partes.Add(parte);
+                    }
+                }
+            }
+
+            return partes;
         }
         #endregion
     }

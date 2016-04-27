@@ -34,9 +34,9 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public EParte Parte { get; set; }
 
         /// <summary>
-        /// Gets or sets the PARTES text.
+        /// Gets or sets the COMPROMISO text.
         /// </summary>
-        /// <value> The PARTES text.</value>
+        /// <value> The COMPROMISO text.</value>
         [Required(ErrorMessage = "Compromiso is required.")]
         public string Compromiso { get; set; }
 
@@ -65,9 +65,9 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public int? InstitucionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the CONVENIO AREA.
+        /// Gets or sets the COMPROMISO AREA.
         /// </summary>
-        /// <value> The CONVENIO AREA list.</value>
+        /// <value> The COMPROMISO AREA list.</value>
         public IEnumerable<EArea> Areas { get; set; }
     }
 }
