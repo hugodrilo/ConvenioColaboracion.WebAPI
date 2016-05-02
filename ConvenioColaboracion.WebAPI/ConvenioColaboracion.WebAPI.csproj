@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\TipoAreaController.cs" />
     <Compile Include="Controllers\SubMateriaController.cs" />
     <Compile Include="Controllers\ParteController.cs" />
