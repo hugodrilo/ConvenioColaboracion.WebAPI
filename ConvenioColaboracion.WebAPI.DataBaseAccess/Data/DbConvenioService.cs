@@ -86,8 +86,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("convenio", OracleDbType.Varchar2, request.Convenio));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("nombreCorto", OracleDbType.Varchar2, request.NombreCorto));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("resumen", OracleDbType.Varchar2, request.Resumen));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion == DateTime.MinValue ? (DateTime?)null : fechaSuscripcion));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino == DateTime.MinValue ? (DateTime?)null : fechaTermino));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("sexenioId", OracleDbType.Int32, request.SexenioId));
@@ -186,8 +186,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("numeroConvenio", OracleDbType.Varchar2, request.NumeroConvenio));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("convenioText", OracleDbType.Varchar2, request.Convenio));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("resumenText", OracleDbType.Varchar2, request.Resumen));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion == DateTime.MinValue ? (DateTime?)null : fechaSuscripcion));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino == DateTime.MinValue ? (DateTime?)null : fechaTermino));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("usuarioActualizacion", OracleDbType.Varchar2, request.UsuarioActualizacion));
@@ -1219,13 +1219,13 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                     commandCompromiso.Parameters.Clear();
 
                     var fechaCompromiso = !string.IsNullOrEmpty(compromiso.FechaCompromiso)
-                        ? DateTime.ParseExact(compromiso.FechaCompromiso, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
-                        : DateTime.MinValue;
+                                             ? DateTime.ParseExact(compromiso.FechaCompromiso, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                                             : DateTime.MinValue;
 
                     // Add the parameters to the list.
                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, request.ConvenioId));
                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromiso", OracleDbType.Varchar2, compromiso.Compromiso));
-                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("fechaCompromiso", OracleDbType.Date, fechaCompromiso));
+                    commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("fechaCompromiso", OracleDbType.Date, fechaCompromiso == DateTime.MinValue ? (DateTime?)null : fechaCompromiso));
                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, compromiso.Avance));
                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("ponderacion", OracleDbType.Int32, compromiso.Ponderacion));
                     commandCompromiso.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, 0, ParameterDirection.Output));

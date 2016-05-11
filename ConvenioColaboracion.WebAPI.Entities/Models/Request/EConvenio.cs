@@ -131,7 +131,6 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the DOCUMENTO.
         /// </summary>
         /// <value> The DOCUMENTO.</value>
-        [Required(ErrorMessage = "Documento is required.")]
         public string Documento { get; set; }
 
         /// <summary>
