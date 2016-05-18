@@ -67,13 +67,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                     using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
                     {
                         // Convert string dates to datetime format.
-                        var fechaSuscripcion = !string.IsNullOrEmpty(request.FechaSuscripcion) ?
-                            DateTime.ParseExact(request.FechaSuscripcion, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) :
-                            DateTime.MinValue;
-
-                        var fechaTermino = !string.IsNullOrEmpty(request.FechaTermino) ?
-                            DateTime.ParseExact(request.FechaTermino, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) :
-                            DateTime.MinValue;
+                        var fechaSuscripcion = ParseDateTime(request.FechaSuscripcion, "dd/MM/yyyy");
+                        var fechaTermino = ParseDateTime(request.FechaTermino, "dd/MM/yyyy");
 
                         // Start the transaction.
                         command.Transaction = transaction;
@@ -88,8 +83,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("resumen", OracleDbType.Varchar2, request.Resumen));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion == DateTime.MinValue ? (DateTime?)null : fechaSuscripcion));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino == DateTime.MinValue ? (DateTime?)null : fechaTermino));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria.MateriaId));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia == null ? (int?)null : request.Materia.MateriaId));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria == null ? (int?)null : request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("sexenioId", OracleDbType.Int32, request.SexenioId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("año", OracleDbType.Int32, request.Año));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaCreacion", OracleDbType.Date, request.FechaCreacion));
@@ -168,13 +163,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                     using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
                     {
                         // Convert string dates to datetime format.
-                        var fechaSuscripcion = !string.IsNullOrEmpty(request.FechaSuscripcion) ?
-                            DateTime.ParseExact(request.FechaSuscripcion, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) :
-                            DateTime.MinValue;
-
-                        var fechaTermino = !string.IsNullOrEmpty(request.FechaTermino) ?
-                            DateTime.ParseExact(request.FechaTermino, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) :
-                            DateTime.MinValue;
+                        var fechaSuscripcion = ParseDateTime(request.FechaSuscripcion, "dd/MM/yyyy");
+                        var fechaTermino = ParseDateTime(request.FechaTermino, "dd/MM/yyyy");
 
                         command.Transaction = transaction;
 
@@ -188,8 +178,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("resumenText", OracleDbType.Varchar2, request.Resumen));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaSuscripcion", OracleDbType.Date, fechaSuscripcion == DateTime.MinValue ? (DateTime?)null : fechaSuscripcion));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaTermino", OracleDbType.Date, fechaTermino == DateTime.MinValue ? (DateTime?)null : fechaTermino));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia.MateriaId));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria.MateriaId));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia == null ? (int?)null : request.Materia.MateriaId));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria == null ? (int?)null : request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("usuarioActualizacion", OracleDbType.Varchar2, request.UsuarioActualizacion));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("rutaDocumento", OracleDbType.Varchar2, request.RutaDocumento));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("comentariosText", OracleDbType.Varchar2, request.Comentarios));
@@ -405,20 +395,17 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                 }
                             }
 
-                            // Get the convenio areas
+                            // Get the convenio areas.
                             convenio.Areas = this.GetsConvenioArea(convenioId, connection);
 
-                            // Get the convenio partes
+                            // Get the convenio partes.
                             convenio.Partes = this.GetsConvenioParte(convenioId, connection);
 
-                            // Get the convenio compromisos
+                            // Get the convenio compromisos.
                             convenio.Compromisos = this.GetsConvenioCompromiso(convenioId, connection);
 
-                            // Create the identifiers string 
-                            var csvIdCompromiso = string.Join(",", convenio.Compromisos.Select(m => m.CompromisoId));
-
-                            //// USP_PARTES_COMPROMISO
-                            convenio.PartesCompromiso = this.GetsPartesCompromiso(csvIdCompromiso, connection);
+                            // Gets the convenio partes for compromiso.
+                            convenio.PartesCompromiso = this.GetsPartesCompromiso(convenioId, connection);
                         }
                     }
                 }
@@ -757,6 +744,19 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         #endregion
 
         #region Auxiliar Methods
+        /// <summary>
+        /// Parses the string date to the specified date time format.
+        /// </summary>
+        /// <param name="date">The date to be parsed.</param>
+        /// <param name="format">The date time format.</param>
+        /// <returns>Expected date in the specified format.</returns>
+        private static DateTime ParseDateTime(string date, string format)
+        {
+            return !string.IsNullOrEmpty(date)
+                ? DateTime.ParseExact(date, format, System.Globalization.CultureInfo.InvariantCulture)
+                : DateTime.MinValue;
+        }
+
         /// <summary>
         /// Gets the CONVENIO from the data reader.
         /// </summary>
@@ -1350,12 +1350,12 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         }
 
         /// <summary>
-        /// Gets the CONVENIO PARTE.
+        /// Gets the CONVENIO PARTE list for COMPROMISO.
         /// </summary>
-        /// <param name="compromisos">The COMPROMISOS identifier string.</param>
+        /// <param name="convenioId">The CONVENIO identifier.</param>
         /// <param name="connection">The current connection.</param>
         /// <returns>A list of CONVENIO PARTE.</returns>
-        private IEnumerable<EParte> GetsPartesCompromiso(string compromisos, IDbConnection connection)
+        private IEnumerable<EParte> GetsPartesCompromiso(int convenioId, IDbConnection connection)
         {
             const string PartesCompromiso = @"USP_PARTES_COMPROMISO";
             var partes = new List<EParte>();
@@ -1367,7 +1367,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                 commandPartes.Parameters.Clear();
 
                 // Add the parameters to the list.
-                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("csvIdCompromiso", OracleDbType.Varchar2, compromisos));
+                commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("idConvenio", OracleDbType.Int32, convenioId));
                 commandPartes.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
 
                 // Execute the reader.
