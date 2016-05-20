@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DbConsultaService.cs" />
     <Compile Include="Data\DbConvenioService.cs" />
+    <Compile Include="Data\IDbConsultaService.cs" />
     <Compile Include="Data\IDbCompromisoService.cs" />
     <Compile Include="Data\IDbConvenioService.cs" />
     <Compile Include="Data\IDbServiceBase.cs" />

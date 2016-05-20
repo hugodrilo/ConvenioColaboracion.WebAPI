@@ -29,8 +29,9 @@ namespace ConvenioColaboracion.WebAPI
                 container.EnableWebApi(GlobalConfiguration.Configuration);
 
                 // Register all the services and implementations.
-                container.Register<IDbConvenioService, DbConvenioService>();
                 container.Register<IDatabaseHelper, DatabaseHelper>();
+                container.Register<IDbConsultaService, DbConsultaService>();
+                container.Register<IDbConvenioService, DbConvenioService>();
 
                 // Basic web api setup
                 GlobalConfiguration.Configure(WebApiConfig.Register);
