@@ -69,8 +69,8 @@ namespace ConvenioColaboracion.WebAPI
                 defaults: new { controller = "Parte", id = RouteParameter.Optional });
 
             config.Routes.MapHttpRoute(
-                name: "Documento",
-                routeTemplate: "api/file/{id}",
+                name: "File",
+                routeTemplate: "api/file/{action}/{id}",
                 defaults: new { controller = "File", id = RouteParameter.Optional });
 
             config.Routes.MapHttpRoute(
