@@ -160,6 +160,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ActividadController.cs" />
+    <Compile Include="Controllers\CompromisoController.cs" />
     <Compile Include="Controllers\BusquedaController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\TipoAreaController.cs" />
@@ -177,6 +179,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\ConvenioColaboracion.WebAPI.Core\ConvenioColaboracion.WebAPI.Core.csproj">
+      <Project>{ce1596dd-36b6-43a5-980a-75a256152103}</Project>
+      <Name>ConvenioColaboracion.WebAPI.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConvenioColaboracion.WebAPI.DataBaseAccess\ConvenioColaboracion.WebAPI.Database.csproj">
       <Project>{3a7c757e-26e0-4df1-8047-72d35ee8be51}</Project>
       <Name>ConvenioColaboracion.WebAPI.Database</Name>

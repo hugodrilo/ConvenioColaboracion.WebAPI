@@ -8,6 +8,7 @@
 namespace ConvenioColaboracion.WebAPI
 {
     using System.Web.Http;
+    using ConvenioColaboracion.WebAPI.Core.Utilities;
     using ConvenioColaboracion.WebAPI.DataBaseAccess.Data;
     using ConvenioColaboracion.WebAPI.DataBaseAccess.Utilities;
     using LightInject;
@@ -32,6 +33,9 @@ namespace ConvenioColaboracion.WebAPI
                 container.Register<IDatabaseHelper, DatabaseHelper>();
                 container.Register<IDbConsultaService, DbConsultaService>();
                 container.Register<IDbConvenioService, DbConvenioService>();
+                container.Register<IDbCompromisoService, DbCompromisoService>();
+                container.Register<IDbActividadService, DbActividadService>();
+                container.Register<IFileManagerUtility, FileManagerUtility>();
 
                 // Basic web api setup
                 GlobalConfiguration.Configure(WebApiConfig.Register);

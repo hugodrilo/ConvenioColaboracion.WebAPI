@@ -1107,6 +1107,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         convenioCompromiso.ConvenioId = readerCompromiso["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_CONVENIO"]);
                         convenioCompromiso.CompromisoId = readerCompromiso["ID_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_COMPROMISO"]);
+                        convenioCompromiso.NumeroCompromiso = readerCompromiso["NUMERO_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["NUMERO_COMPROMISO"]);
                         convenioCompromiso.Compromiso = readerCompromiso["COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["COMPROMISO"]);
                         convenioCompromiso.FechaCompromiso = readerCompromiso["FECHA_COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["FECHA_COMPROMISO"]);
                         convenioCompromiso.Avance = readerCompromiso["AVANCE"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["AVANCE"]);
