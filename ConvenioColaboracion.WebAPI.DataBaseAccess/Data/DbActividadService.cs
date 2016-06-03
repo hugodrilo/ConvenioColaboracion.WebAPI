@@ -388,7 +388,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             actividad.ActividadId = reader["ID_ACTIVIDAD"] is DBNull ? 0 : Convert.ToInt32(reader["ID_ACTIVIDAD"]);
             actividad.CompromisoId = reader["ID_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(reader["ID_COMPROMISO"]);
-            actividad.FechaActividad = reader["FECHA_ACTIVIDAD"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_ACTIVIDAD"]);
+            actividad.FechaActividad = reader["FORMATTED_FECHA_ACTIVIDAD"] is DBNull ? string.Empty : Convert.ToString(reader["FORMATTED_FECHA_ACTIVIDAD"]);
             actividad.PorcentajeAvance = reader["PORCENTAJE_AVANCE"] is DBNull ? 0 : Convert.ToInt32(reader["PORCENTAJE_AVANCE"]);
             actividad.Actividad = reader["ACTIVIDAD"] is DBNull ? string.Empty : Convert.ToString(reader["ACTIVIDAD"]);
             actividad.Anexo = reader["ANEXO"] is DBNull ? string.Empty : Convert.ToString(reader["ANEXO"]); ////(RutaDocumento)

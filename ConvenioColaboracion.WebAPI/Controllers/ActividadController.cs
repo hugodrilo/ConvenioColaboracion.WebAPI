@@ -139,7 +139,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                     const string CompromisoFolderName = @"Compromiso\";
                     var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-                    var destinationFolder = baseDirectory + CompromisoFolderName + actividadRequest.CompromisoId + "\\";
+                    var destinationFolder = baseDirectory + CompromisoFolderName + actividadRequest.CompromisoId;
 
                     var finalPath = this.FileManagerUtility.GetDocumentPath(actividadRequest.NombreDocumento, destinationFolder);
 
@@ -168,20 +168,22 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// <summary>
         ///  Allows to delete the specified ACTIVIDAD.
         /// </summary>
-        /// <param name="actividadRequest">The ACTIVIDAD request model.</param>
+        /// <param name="id">The ACTIVIDAD identifier.</param>
         /// <returns>A value indicating whether the data was successful inserted or not.</returns>
         [HttpDelete]
-        public HttpResponseMessage Delete([FromBody] EActividad actividadRequest)
+        public HttpResponseMessage Delete(int id)
         {
             if (this.ModelState.IsValid)
             {
-                if (actividadRequest == null)
+                if (id < 0)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request object.");
                 }
 
+                var actividad = new EActividad { ActividadId = id };
+
                 // Call the data service
-                var result = this.DbActividadService.Delete(actividadRequest);
+                var result = this.DbActividadService.Delete(actividad);
 
                 if (!result)
                 {
