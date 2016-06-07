@@ -23,9 +23,6 @@ namespace ConvenioColaboracion.WebAPI.Core.Utilities
         /// <returns>The generated document path.</returns>
         public string GetDocumentPath(string fileName, string destinationFolder)
         {
-            ////var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            ////var destinyDirectory = baseDirectory + destinationFolder;
-
             if (!Directory.Exists(destinationFolder))
             {
                 Directory.CreateDirectory(destinationFolder);

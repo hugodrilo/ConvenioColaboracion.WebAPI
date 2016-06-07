@@ -19,6 +19,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The CONVENIO controller implementation class.
     /// </summary>
+    [Authorize]
     public class ConvenioController : ApiController
     {
         /// <summary>
