@@ -8,6 +8,7 @@
 namespace ConvenioColaboracion.WebAPI
 {
     using System.Web.Http;
+    using ConvenioColaboracion.WebAPI.Core.Logging;
     using ConvenioColaboracion.WebAPI.Core.Utilities;
     using ConvenioColaboracion.WebAPI.DataBaseAccess.Data;
     using ConvenioColaboracion.WebAPI.DataBaseAccess.Utilities;
@@ -23,6 +24,8 @@ namespace ConvenioColaboracion.WebAPI
         /// </summary>
         protected void Application_Start()
         {
+            log4net.Config.XmlConfigurator.Configure();
+
             using (var container = new ServiceContainer())
             {
                 // Configure depenency injection
@@ -36,6 +39,7 @@ namespace ConvenioColaboracion.WebAPI
                 container.Register<IDbCompromisoService, DbCompromisoService>();
                 container.Register<IDbActividadService, DbActividadService>();
                 container.Register<IFileManagerUtility, FileManagerUtility>();
+                container.Register<ILogger, Logger>();
 
                 // Basic web api setup
                 GlobalConfiguration.Configure(WebApiConfig.Register);

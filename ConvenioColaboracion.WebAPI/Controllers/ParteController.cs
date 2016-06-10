@@ -17,6 +17,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The PARTE controller implementation class.
     /// </summary>
+    [Authorize]
     public class ParteController : ApiController
     {
         /// <summary>

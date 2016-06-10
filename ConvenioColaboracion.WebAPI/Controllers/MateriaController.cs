@@ -17,6 +17,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The MATERIA controller implementation class.
     /// </summary>
+    [Authorize]
     public class MateriaController : ApiController
     {
         /// <summary>

@@ -17,6 +17,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The SUBMATERIA controller implementation class.
     /// </summary>
+    [Authorize]
     public class SubMateriaController : ApiController
     {
         /// <summary>

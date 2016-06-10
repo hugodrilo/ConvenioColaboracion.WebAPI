@@ -17,6 +17,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The file controller class.
     /// </summary>
+    [Authorize]
     public class FileController : ApiController
     {
         /// <summary>
