@@ -19,7 +19,6 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The CONVENIO controller implementation class.
     /// </summary>
-    [Authorize]
     public class ConvenioController : ApiController
     {
         /// <summary>
@@ -80,6 +79,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// </summary>
         /// <param name="convenioRequest">The CONVENIO request model.</param>
         /// <returns>A value indicating whether the data was successful inserted or not.</returns>
+        [Authorize]
         [HttpPost]
         public HttpResponseMessage Post([FromBody] EConvenio convenioRequest)
         {

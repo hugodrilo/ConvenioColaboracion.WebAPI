@@ -15,7 +15,6 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The COMPROMISO controller implementation class.
     /// </summary>
-    [Authorize]
     public class CompromisoController : ApiController
     {
         /// <summary>

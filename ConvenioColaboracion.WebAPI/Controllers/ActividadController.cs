@@ -19,7 +19,6 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The area controller implementation class.
     /// </summary>
-    [Authorize]
     public class ActividadController : ApiController
     {
         /// <summary>
@@ -77,6 +76,9 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// </summary>
         /// <param name="actividadRequest">The ACTIVIDAD request model.</param>
         /// <returns>A value indicating whether the data was successful inserted or not.</returns>
+        ////[Authorize]
+        ////[Authorize(Roles = "Administrators")] //Restrict by roles
+        ////[Authorize(Users = "Joydip,Jini")] //Restrict access by user
         [HttpPost]
         public HttpResponseMessage Post([FromBody] EActividad actividadRequest)
         {

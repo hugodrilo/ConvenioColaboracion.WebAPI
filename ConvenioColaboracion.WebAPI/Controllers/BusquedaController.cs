@@ -17,7 +17,6 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The BUSQUEDA controller implementation class.
     /// </summary>
-    [Authorize]
     public class BusquedaController : ApiController
     {
         /// <summary>
