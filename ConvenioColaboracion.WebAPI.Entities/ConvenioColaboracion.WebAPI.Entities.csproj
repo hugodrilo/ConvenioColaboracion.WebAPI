@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Request\EActividad.cs" />
+    <Compile Include="Models\Request\EEstatus.cs" />
     <Compile Include="Models\Request\ETipoArea.cs" />
     <Compile Include="Models\Request\EArea.cs" />
     <Compile Include="Models\Request\EConvenioArea.cs" />

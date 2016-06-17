@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
@@ -168,6 +168,7 @@
     <Compile Include="Controllers\CompromisoController.cs" />
     <Compile Include="Controllers\BusquedaController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\EstatusController.cs" />
     <Compile Include="Controllers\TipoAreaController.cs" />
     <Compile Include="Controllers\SubMateriaController.cs" />
     <Compile Include="Controllers\ParteController.cs" />

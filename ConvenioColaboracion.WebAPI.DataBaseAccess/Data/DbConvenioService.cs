@@ -91,7 +91,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("usuarioCreacion", OracleDbType.Varchar2, request.UsuarioCreacion));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaUltimaActividad", OracleDbType.Date, request.FechaUltimaActividad));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, request.Avance));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("estatus", OracleDbType.Char, request.Estatus));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("estatus", OracleDbType.Char, request.Estatus == null ? char.MinValue : request.Estatus.Estatus));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("rutaDocumento", OracleDbType.Varchar2, request.RutaDocumento));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("comentarios", OracleDbType.Varchar2, request.Comentarios));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, 0, ParameterDirection.Output));
@@ -741,6 +741,68 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return tipoAreaList;
         }
+
+        /// <summary>
+        /// Gets the ESTATUS list from the database. 
+        /// </summary>
+        /// <returns>The list of ESTATUS.</returns>
+        public IEnumerable<EEstatus> GetEstatus()
+        {
+            // The expected model list.
+            var estatusList = new List<EEstatus>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_ESTATUS_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var estatus = new EEstatus();
+
+                                        estatus.Estatus = reader["ESTATUS"] is DBNull ? 0 : Convert.ToInt32(reader["ESTATUS"]);
+                                        estatus.Descripcion = reader["DESCRIPCION"] is DBNull ? string.Empty : Convert.ToString(reader["DESCRIPCION"]);
+
+                                        // Add the element to the list.
+                                        estatusList.Add(estatus);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return estatusList;
+        }
         #endregion
 
         #region Auxiliar Methods
@@ -785,7 +847,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             convenio.UsuarioActualizacion = reader["USUARIO_ACTUALIZACION"] is DBNull ? string.Empty : Convert.ToString(reader["USUARIO_ACTUALIZACION"]);
             convenio.FechaUltimaActividad = reader["FECHA_ULTIMA_ACTIVIDAD"] is DBNull ? DateTime.MinValue : Convert.ToDateTime(reader["FECHA_ULTIMA_ACTIVIDAD"]);
             convenio.Avance = reader["AVANCE"] is DBNull ? 0 : Convert.ToInt32(reader["AVANCE"]);
-            convenio.Estatus = reader["ESTATUS"] is DBNull ? char.MinValue : Convert.ToChar(reader["ESTATUS"]);
+            convenio.Estatus = new EEstatus();
+            convenio.Estatus.Estatus = reader["ESTATUS"] is DBNull ? char.MinValue : Convert.ToChar(reader["ESTATUS"]);
             convenio.RutaDocumento = reader["RUTA_DOCUMENTO"] is DBNull ? string.Empty : Convert.ToString(reader["RUTA_DOCUMENTO"]);
             convenio.NombreDocumento = string.IsNullOrEmpty(convenio.RutaDocumento) ? string.Empty : convenio.RutaDocumento.Substring(convenio.RutaDocumento.LastIndexOf('\\') + 1);
             convenio.Comentarios = reader["COMENTARIOS"] is DBNull ? string.Empty : Convert.ToString(reader["COMENTARIOS"]);

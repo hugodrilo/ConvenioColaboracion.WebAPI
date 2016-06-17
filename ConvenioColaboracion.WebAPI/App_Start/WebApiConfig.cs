@@ -88,6 +88,11 @@ namespace ConvenioColaboracion.WebAPI
                 routeTemplate: "api/actividad/{action}/{id}",
                 defaults: new { controller = "Actividad", id = RouteParameter.Optional });
 
+            config.Routes.MapHttpRoute(
+                name: "Estatus",
+                routeTemplate: "api/estatus/{id}",
+                defaults: new { controller = "Estatus", id = RouteParameter.Optional });
+
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";
             var cors = new EnableCorsAttribute(origins, "*", "*");

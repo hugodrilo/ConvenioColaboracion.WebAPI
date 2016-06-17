@@ -125,7 +125,7 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// Gets or sets the ESTATUS.
         /// </summary>
         /// <value> The ESTATUS.</value>
-        public char? Estatus { get; set; }
+        public EEstatus Estatus { get; set; }
 
         /// <summary>
         /// Gets or sets the DOCUMENTO.
