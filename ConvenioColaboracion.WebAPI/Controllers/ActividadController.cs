@@ -185,12 +185,21 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
                 var actividad = new EActividad { ActividadId = id };
 
-                // Call the data service
+                // Call the data service.
+                actividad = this.DbActividadService.Get(actividad.ActividadId);
+
+                // Check the data service result.
                 var result = this.DbActividadService.Delete(actividad);
 
                 if (!result)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Actividad no eliminada.");
+                }
+
+                // Delete the file. 
+                if (!string.IsNullOrEmpty(actividad.Documento))
+                {
+                    this.FileManagerUtility.DeleteFile(actividad.Documento);
                 }
 
                 return Request.CreateResponse(HttpStatusCode.Created, "Actividad Eliminada.");

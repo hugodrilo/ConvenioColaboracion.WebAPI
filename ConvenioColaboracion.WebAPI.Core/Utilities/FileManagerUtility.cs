@@ -68,5 +68,17 @@ namespace ConvenioColaboracion.WebAPI.Core.Utilities
 
             return fileCopied;
         }
+
+        /// <summary>
+        /// Deletes the specified File from the file system.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        public void DeleteFile(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+        }
     }
 }

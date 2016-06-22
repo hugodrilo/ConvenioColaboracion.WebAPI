@@ -15,7 +15,7 @@ namespace ConvenioColaboracion.WebAPI.Core.Utilities
         /// <summary>
         /// Gets the document path.
         /// </summary>
-        /// <param name="fileName">The file name</param>
+        /// <param name="fileName">The file name.</param>
         /// <param name="destinationFolder">The destination folder name.</param>
         /// <returns>The generated document path.</returns>
         string GetDocumentPath(string fileName, string destinationFolder);
@@ -27,5 +27,11 @@ namespace ConvenioColaboracion.WebAPI.Core.Utilities
         /// <param name="finalPath">The destiny file path.</param>
         /// <returns>A value indicating whether the file was copied or not.</returns>
         bool CopyDocument(string document, string finalPath);
+
+        /// <summary>
+        /// Deletes the specified File from the file system.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        void DeleteFile(string fileName);
     }
 }
