@@ -63,11 +63,6 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             var actividades = actividadList as EActividad[] ?? actividadList.ToArray();
 
-            if (!actividades.Any())
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron actividades.");
-            }
-
             return Request.CreateResponse(HttpStatusCode.OK, actividades);
         }
 

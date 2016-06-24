@@ -92,6 +92,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         if (request.ActividadId > 0)
                         {
+                            this.AvanceManual(request, connection);
                             result = true;
                             transaction.Commit();
                         }
@@ -164,6 +165,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         if (isUpdated > 0)
                         {
+                            this.AvanceManual(request, connection);
                             result = true;
                             transaction.Commit();
                         }
@@ -227,6 +229,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         if (isDeleted > 0)
                         {
+                            this.AvanceManual(request, connection);
                             result = true;
                             transaction.Commit();
                         }
@@ -400,6 +403,62 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return actividad;
         }
+
+        /// <summary>
+        /// Deletes the ACTIVIDAD in the database.
+        /// </summary>
+        /// <param name="request">The requested entity.</param>
+        /// <param name="connection">The current connection.</param>
+        /// <returns> A value indicating whether the data was successful deleted or not.</returns>
+        private void AvanceManual(EActividad request, IDbConnection connection)
+        {
+            // The expected result.
+            var convenioId = 0;
+
+            // The SQL stored procedure name.
+            const string StoredProcedureNameCompromiso = @"USP_AVANCE_COMPROMISO";
+
+            // Create database command object.
+            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureNameCompromiso, connection))
+            {
+                // Clear the parameters.
+                command.Parameters.Clear();
+
+                // Add the parameters to the list.
+                command.Parameters.Add(this.databaseHelper.CreateParameter("compromisoId", OracleDbType.Int32, request.CompromisoId));
+                command.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, 0, ParameterDirection.Output));
+
+                // Execute the stored procedure.
+                command.ExecuteNonQuery();
+
+                // Get the inserted convenio identifier.
+                convenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
+                                         ((IDataParameter)command.Parameters["convenioId"]).Value == null
+                                         ? 0
+                                         : Convert.ToInt32(((IDataParameter)command.Parameters["convenioId"]).Value.ToString());
+
+            }
+
+            if (convenioId > 0)
+            {
+                // The SQL stored procedure name.
+                const string StoredProcedureNameConvenio = @"USP_AVANCE_CONVENIO";
+
+                // Create database command object.
+                using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureNameConvenio, connection))
+                {
+                    // Clear the parameters.
+                    command.Parameters.Clear();
+
+                    // Add the parameters to the list.
+                    command.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, convenioId));
+
+                    // Execute the stored procedure.
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         #endregion
     }
 }
