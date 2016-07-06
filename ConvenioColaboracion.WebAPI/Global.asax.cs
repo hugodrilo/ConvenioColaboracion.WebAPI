@@ -38,6 +38,7 @@ namespace ConvenioColaboracion.WebAPI
                 container.Register<IDbConvenioService, DbConvenioService>();
                 container.Register<IDbCompromisoService, DbCompromisoService>();
                 container.Register<IDbActividadService, DbActividadService>();
+                container.Register<IDbEstadisticaService, DbEstadisticaService>();
                 container.Register<IFileManagerUtility, FileManagerUtility>();
                 container.Register<ILogger, Logger>();
 

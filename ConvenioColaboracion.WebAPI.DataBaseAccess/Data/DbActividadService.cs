@@ -84,7 +84,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Execute the stored procedure.
                         command.ExecuteNonQuery();
 
-                        // Get the inserted convenio identifier.
+                        // GetInformePeriodo the inserted convenio identifier.
                         request.ActividadId = ((IDataParameter)command.Parameters["actividadId"]).Value == DBNull.Value ||
                                                  ((IDataParameter)command.Parameters["actividadId"]).Value == null
                                                  ? 0
@@ -409,7 +409,6 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         /// </summary>
         /// <param name="request">The requested entity.</param>
         /// <param name="connection">The current connection.</param>
-        /// <returns> A value indicating whether the data was successful deleted or not.</returns>
         private void AvanceManual(EActividad request, IDbConnection connection)
         {
             // The expected result.
@@ -431,12 +430,11 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                 // Execute the stored procedure.
                 command.ExecuteNonQuery();
 
-                // Get the inserted convenio identifier.
+                // GetInformePeriodo the inserted convenio identifier.
                 convenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
                                          ((IDataParameter)command.Parameters["convenioId"]).Value == null
                                          ? 0
                                          : Convert.ToInt32(((IDataParameter)command.Parameters["convenioId"]).Value.ToString());
-
             }
 
             if (convenioId > 0)

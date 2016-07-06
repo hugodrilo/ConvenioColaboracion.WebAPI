@@ -167,6 +167,7 @@
     <Compile Include="Controllers\ActividadController.cs" />
     <Compile Include="Controllers\CompromisoController.cs" />
     <Compile Include="Controllers\BusquedaController.cs" />
+    <Compile Include="Controllers\EstadisticaController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\EstatusController.cs" />
     <Compile Include="Controllers\TipoAreaController.cs" />

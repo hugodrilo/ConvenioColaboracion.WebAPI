@@ -50,6 +50,8 @@
     <Compile Include="Data\DbActividadService.cs" />
     <Compile Include="Data\DbConvenioService.cs" />
     <Compile Include="Data\IDbCompromisoService.cs" />
+    <Compile Include="Data\DbEstadisticaService.cs" />
+    <Compile Include="Data\IDbEstadisticaService.cs" />
     <Compile Include="Data\IDbConsultaService.cs" />
     <Compile Include="Data\IDbActividadService.cs" />
     <Compile Include="Data\IDbConvenioService.cs" />

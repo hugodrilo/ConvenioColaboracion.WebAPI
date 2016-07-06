@@ -99,7 +99,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Execute the stored procedure.
                         command.ExecuteNonQuery();
 
-                        // Get the inserted convenio identifier.
+                        // GetInformePeriodo the inserted convenio identifier.
                         request.ConvenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
                                                  ((IDataParameter)command.Parameters["convenioId"]).Value == null
                                                  ? 0
@@ -396,13 +396,13 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                 }
                             }
 
-                            // Get the convenio areas.
+                            // GetInformePeriodo the convenio areas.
                             convenio.Areas = this.GetsConvenioArea(convenioId, connection);
 
-                            // Get the convenio partes.
+                            // GetInformePeriodo the convenio partes.
                             convenio.Partes = this.GetsConvenioParte(convenioId, connection);
 
-                            // Get the convenio compromisos.
+                            // GetInformePeriodo the convenio compromisos.
                             convenio.Compromisos = this.GetsConvenioCompromiso(convenioId, connection);
 
                             // Gets the convenio partes for compromiso.
@@ -1177,7 +1177,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         convenioCompromiso.Avance = readerCompromiso["AVANCE"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["AVANCE"]);
                         convenioCompromiso.Ponderacion = readerCompromiso["PONDERACION"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["PONDERACION"]);
 
-                        // Get the compromiso area
+                        // GetInformePeriodo the compromiso area
                         const string CompromisoParteStoredProcedureName = @"USP_COMPROMISO_PARTE_BY_ID";
 
                         // Add the PARTE model
@@ -1215,7 +1215,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                             }
                         }
 
-                        // Get the compromiso area
+                        // GetInformePeriodo the compromiso area
                         const string CompromisoAreaStoredProcedureName = @"USP_COMPROMISO_AREA_BY_ID";
 
                         // Create database command object.
