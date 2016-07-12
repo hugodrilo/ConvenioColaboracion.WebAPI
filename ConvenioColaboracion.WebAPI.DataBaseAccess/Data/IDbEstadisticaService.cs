@@ -49,5 +49,12 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         /// <param name="id">The SEXENIO identifier.</param>
         /// <returns>Expected SEXENIO model.</returns>
         ESexenio GetSexenio(int id);
+
+        /// <summary>
+        /// Gets all the results from the database that matches the specified request parameters. 
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <returns>Expected CONVENIO list.</returns>
+        IEnumerable<Entities.Models.Return.EBuscaConvenio> GetConvenio(EBuscaConvenio request);
     }
 }

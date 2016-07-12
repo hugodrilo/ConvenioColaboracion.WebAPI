@@ -7,6 +7,7 @@
 
 namespace ConvenioColaboracion.WebAPI.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -127,6 +128,41 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         {
             // Call the data service
             var sexenio = this.DbEstadisticaService.GetSexenio(id);
+
+            return Request.CreateResponse(HttpStatusCode.OK, sexenio);
+        }
+
+        /// <summary>
+        /// Gets a CONVENIO list.
+        /// </summary>
+        /// <param name="admonId">The ADMON identifier .</param>
+        /// <param name="matId">The MATERIA identifier.</param>
+        /// <returns>Expected CONVENIO model list.</returns>
+        [HttpGet]
+        public HttpResponseMessage GetConvenios(int admonId, int matId)
+        {
+            var request = new EBuscaConvenio();
+
+            request.Filtros = new EFiltrosBusqueda();
+            request.Pagina = 1;
+            request.Registros = 10;
+            request.Keywords = string.Empty;
+            request.Filtros.Areas = new List<int>();
+            request.Filtros.Avances = new List<string>();
+            request.Filtros.Materias = new List<int>();
+            var materiasList = new List<int>();
+            materiasList.Add(matId);
+            request.Filtros.Materias = materiasList;
+            request.Filtros.Partes = new List<int>();
+            request.Filtros.Periodos = new List<int>(admonId);
+            var periodosList = new List<int>();
+            periodosList.Add(admonId);
+            request.Filtros.Periodos = periodosList;
+            request.Filtros.RI = new List<int>();
+            request.Filtros.RO = new List<int>();
+
+            // Call the data service
+            var sexenio = this.DbEstadisticaService.GetConvenio(request);
 
             return Request.CreateResponse(HttpStatusCode.OK, sexenio);
         }

@@ -98,6 +98,12 @@ namespace ConvenioColaboracion.WebAPI
                 routeTemplate: "api/estadistica/{action}/{id}",
                 defaults: new { controller = "Estadistica", id = RouteParameter.Optional });
 
+            config.Routes.MapHttpRoute(
+                name: "EstadisticaAdmon",
+                routeTemplate: "api/estadistica/{action}/{admonId}/{matId}",
+                defaults:
+                    new { controller = "Estadistica", admonId = RouteParameter.Optional, matId = RouteParameter.Optional });
+
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";
             var cors = new EnableCorsAttribute(origins, "*", "*");

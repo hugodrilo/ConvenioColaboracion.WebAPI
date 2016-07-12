@@ -345,6 +345,70 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             return sexenio;
         }
 
+        /// <summary>
+        /// Gets all the results from the database that matches the specified request parameters. 
+        /// </summary>
+        /// <param name="request">The request model.</param>
+        /// <returns>Expected CONVENIO list.</returns>
+        public IEnumerable<Entities.Models.Return.EBuscaConvenio> GetConvenio(EBuscaConvenio request)
+        {
+            var convenioList = new List<Entities.Models.Return.EBuscaConvenio>();
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // The SQL stored procedure name.
+                            const string StoredProcedureName = @"USP_BUSCA_CONVENIOS";
+
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+                                var filtro = Newtonsoft.Json.JsonConvert.SerializeObject(request.Filtros);
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("P_PAGINA", OracleDbType.Int32, request.Pagina));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("P_REGISTROS", OracleDbType.Int32, request.Registros));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("P_KEYWORDS", OracleDbType.Varchar2, request.Keywords));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("P_FILTROS", OracleDbType.Varchar2, filtro));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("CUR_RESULTADO", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var convenio = GetConvenioFromReader(reader);
+
+                                        convenioList.Add(convenio);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return convenioList;
+        }
+
         #region Auxiliar Methods
         /// <summary>
         /// Gets the INFORME POR ADMINISTRACION from the data reader.
@@ -418,6 +482,33 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             materia.NumeroConvenio = reader["CONVENIOS"] is DBNull ? 0 : Convert.ToInt32(reader["CONVENIOS"]);
 
             return materia;
+        }
+
+        /// <summary>
+        /// Gets the CONVENIO from the data reader.
+        /// </summary>
+        /// <param name="reader">The data reader.</param>
+        /// <returns>The expected CONVENIO model</returns>
+        private static Entities.Models.Return.EBuscaConvenio GetConvenioFromReader(IDataReader reader)
+        {
+            var convenio = new Entities.Models.Return.EBuscaConvenio();
+
+            convenio.ConvenioId = reader["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(reader["ID_CONVENIO"]);
+            convenio.NumeroConvenio = reader["NUMERO_CONVENIO"] is DBNull ? string.Empty : Convert.ToString(reader["NUMERO_CONVENIO"]);
+            convenio.Convenio = reader["CONVENIO"] is DBNull ? string.Empty : Convert.ToString(reader["CONVENIO"]);
+            convenio.NombreCorto = reader["NOMBRE_CORTO"] is DBNull ? string.Empty : Convert.ToString(reader["NOMBRE_CORTO"]);
+            convenio.Resumen = reader["RESUMEN"] is DBNull ? string.Empty : Convert.ToString(reader["RESUMEN"]);
+            convenio.FechaSuscripcion = reader["FECHA_SUSCRIPCION"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_SUSCRIPCION"]);
+            convenio.FechaTermino = reader["FECHA_TERMINO"] is DBNull ? string.Empty : Convert.ToString(reader["FECHA_TERMINO"]);
+            convenio.Materia = reader["MATERIA"] is DBNull ? string.Empty : Convert.ToString(reader["MATERIA"]);
+            convenio.SexenioId = reader["ID_SEXENIO"] is DBNull ? 0 : Convert.ToInt32(reader["ID_SEXENIO"]);
+            convenio.Avance = reader["AVANCE"] is DBNull ? 0 : Convert.ToInt32(reader["AVANCE"]);
+            convenio.Estatus = reader["ESTATUS"] is DBNull ? 0 : Convert.ToInt32(reader["ESTATUS"]);
+            convenio.RutaDocumento = reader["RUTA_DOCUMENTO"] is DBNull ? string.Empty : Convert.ToString(reader["RUTA_DOCUMENTO"]);
+            convenio.Comentarios = reader["COMENTARIOS"] is DBNull ? string.Empty : Convert.ToString(reader["COMENTARIOS"]);
+            convenio.Logo = reader["LOGO"] is DBNull ? string.Empty : Convert.ToString(reader["LOGO"]);
+
+            return convenio;
         }
 
         #endregion
