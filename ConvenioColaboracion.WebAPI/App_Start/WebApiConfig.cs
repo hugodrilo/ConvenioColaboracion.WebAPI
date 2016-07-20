@@ -100,9 +100,16 @@ namespace ConvenioColaboracion.WebAPI
 
             config.Routes.MapHttpRoute(
                 name: "EstadisticaAdmon",
-                routeTemplate: "api/estadistica/{action}/{admonId}/{matId}",
+                routeTemplate: "api/estadistica/{action}/{admonId}/{matId}/{areaId}/{estatusId}",
                 defaults:
-                    new { controller = "Estadistica", admonId = RouteParameter.Optional, matId = RouteParameter.Optional });
+                    new
+                    {
+                        controller = "Estadistica",
+                        admonId = RouteParameter.Optional,
+                        matId = RouteParameter.Optional,
+                        areaId = RouteParameter.Optional,
+                        estatusId = RouteParameter.Optional
+                    });
 
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";

@@ -137,9 +137,15 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// </summary>
         /// <param name="admonId">The ADMON identifier .</param>
         /// <param name="matId">The MATERIA identifier.</param>
+        /// <param name="areaId">The area identifier .</param>
+        /// <param name="estatusId">The status identifier.</param>
         /// <returns>Expected CONVENIO model list.</returns>
         [HttpGet]
-        public HttpResponseMessage GetConvenios(int admonId, int matId)
+        public HttpResponseMessage GetConvenios(
+            int admonId,
+            int matId,
+            int areaId = 0,
+            int estatusId = 0)
         {
             var request = new EBuscaConvenio();
 
@@ -147,24 +153,50 @@ namespace ConvenioColaboracion.WebAPI.Controllers
             request.Pagina = 1;
             request.Registros = 10;
             request.Keywords = string.Empty;
-            request.Filtros.Areas = new List<int>();
-            request.Filtros.Avances = new List<string>();
+            var areaList = new List<int>();
+
+            if (areaId > 0)
+            {
+                areaList.Add(areaId);
+            }
+
+            request.Filtros.Areas = areaList;
+
+            var avanceList = new List<string>();
+
+            if (estatusId > 0)
+            {
+                avanceList.Add(estatusId.ToString());
+            }
+
+            request.Filtros.Avances = avanceList;
+
             request.Filtros.Materias = new List<int>();
             var materiasList = new List<int>();
-            materiasList.Add(matId);
+
+            if (matId > 0)
+            {
+                materiasList.Add(matId);
+            }
+
             request.Filtros.Materias = materiasList;
             request.Filtros.Partes = new List<int>();
-            request.Filtros.Periodos = new List<int>(admonId);
+            request.Filtros.Periodos = new List<int>();
             var periodosList = new List<int>();
-            periodosList.Add(admonId);
+
+            if (admonId > 0)
+            {
+                periodosList.Add(admonId);
+            }
+
             request.Filtros.Periodos = periodosList;
             request.Filtros.RI = new List<int>();
             request.Filtros.RO = new List<int>();
 
             // Call the data service
-            var sexenio = this.DbEstadisticaService.GetConvenio(request);
+            var convenioList = this.DbEstadisticaService.GetConvenio(request);
 
-            return Request.CreateResponse(HttpStatusCode.OK, sexenio);
+            return Request.CreateResponse(HttpStatusCode.OK, convenioList);
         }
     }
 }
