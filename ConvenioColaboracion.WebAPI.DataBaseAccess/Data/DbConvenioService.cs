@@ -91,7 +91,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("usuarioCreacion", OracleDbType.Varchar2, request.UsuarioCreacion));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("fechaUltimaActividad", OracleDbType.Date, request.FechaUltimaActividad));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("avance", OracleDbType.Int32, request.Avance));
-                        command.Parameters.Add(this.databaseHelper.CreateParameter("estatus", OracleDbType.Char, request.Estatus));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("estatus", OracleDbType.Char, request.Estatus == null ? 0 : request.Estatus.Estatus));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("rutaDocumento", OracleDbType.Varchar2, request.RutaDocumento));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("comentarios", OracleDbType.Varchar2, request.Comentarios));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("convenioId", OracleDbType.Int32, 0, ParameterDirection.Output));
@@ -99,7 +99,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         // Execute the stored procedure.
                         command.ExecuteNonQuery();
 
-                        // Get the inserted convenio identifier.
+                        // GetInformePeriodo the inserted convenio identifier.
                         request.ConvenioId = ((IDataParameter)command.Parameters["convenioId"]).Value == DBNull.Value ||
                                                  ((IDataParameter)command.Parameters["convenioId"]).Value == null
                                                  ? 0
@@ -181,6 +181,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                         command.Parameters.Add(this.databaseHelper.CreateParameter("materiaId", OracleDbType.Int32, request.Materia == null ? (int?)null : request.Materia.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("subMateriaId", OracleDbType.Int32, request.SubMateria == null ? (int?)null : request.SubMateria.MateriaId));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("usuarioActualizacion", OracleDbType.Varchar2, request.UsuarioActualizacion));
+                        command.Parameters.Add(this.databaseHelper.CreateParameter("estatusId", OracleDbType.Int32, request.Estatus == null ? 0 : request.Estatus.Estatus));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("rutaDocumento", OracleDbType.Varchar2, request.RutaDocumento));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("comentariosText", OracleDbType.Varchar2, request.Comentarios));
                         command.Parameters.Add(this.databaseHelper.CreateParameter("affectedRows", OracleDbType.Int32, 0, ParameterDirection.Output));
@@ -395,13 +396,13 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                 }
                             }
 
-                            // Get the convenio areas.
+                            // GetInformePeriodo the convenio areas.
                             convenio.Areas = this.GetsConvenioArea(convenioId, connection);
 
-                            // Get the convenio partes.
+                            // GetInformePeriodo the convenio partes.
                             convenio.Partes = this.GetsConvenioParte(convenioId, connection);
 
-                            // Get the convenio compromisos.
+                            // GetInformePeriodo the convenio compromisos.
                             convenio.Compromisos = this.GetsConvenioCompromiso(convenioId, connection);
 
                             // Gets the convenio partes for compromiso.
@@ -741,6 +742,68 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return tipoAreaList;
         }
+
+        /// <summary>
+        /// Gets the ESTATUS list from the database. 
+        /// </summary>
+        /// <returns>The list of ESTATUS.</returns>
+        public IEnumerable<EEstatus> GetEstatus()
+        {
+            // The expected model list.
+            var estatusList = new List<EEstatus>();
+
+            // The SQL stored procedure name.
+            const string StoredProcedureName = @"USP_ESTATUS_SELECT";
+
+            try
+            {
+                // Create the database connection from the helper.
+                using (var connection = this.databaseHelper.CreateDbConnection())
+                {
+                    connection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    connection.Open();
+
+                    // Create database command object for delete and insert.
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        if (transaction != null)
+                        {
+                            // Create database command object.
+                            using (var command = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureName, connection))
+                            {
+                                // Clear the parameters.
+                                command.Parameters.Clear();
+
+                                // Add the parameters to the list.
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                // Execute the reader.
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    // Read the data rows.
+                                    while (reader.Read())
+                                    {
+                                        var estatus = new EEstatus();
+
+                                        estatus.Estatus = reader["ESTATUS"] is DBNull ? 0 : Convert.ToInt32(reader["ESTATUS"]);
+                                        estatus.Descripcion = reader["DESCRIPCION"] is DBNull ? string.Empty : Convert.ToString(reader["DESCRIPCION"]);
+
+                                        // Add the element to the list.
+                                        estatusList.Add(estatus);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return estatusList;
+        }
         #endregion
 
         #region Auxiliar Methods
@@ -785,7 +848,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             convenio.UsuarioActualizacion = reader["USUARIO_ACTUALIZACION"] is DBNull ? string.Empty : Convert.ToString(reader["USUARIO_ACTUALIZACION"]);
             convenio.FechaUltimaActividad = reader["FECHA_ULTIMA_ACTIVIDAD"] is DBNull ? DateTime.MinValue : Convert.ToDateTime(reader["FECHA_ULTIMA_ACTIVIDAD"]);
             convenio.Avance = reader["AVANCE"] is DBNull ? 0 : Convert.ToInt32(reader["AVANCE"]);
-            convenio.Estatus = reader["ESTATUS"] is DBNull ? char.MinValue : Convert.ToChar(reader["ESTATUS"]);
+            convenio.Estatus = new EEstatus();
+            convenio.Estatus.Estatus = reader["ESTATUS"] is DBNull ? 0 : Convert.ToInt32(reader["ESTATUS"]);
             convenio.RutaDocumento = reader["RUTA_DOCUMENTO"] is DBNull ? string.Empty : Convert.ToString(reader["RUTA_DOCUMENTO"]);
             convenio.NombreDocumento = string.IsNullOrEmpty(convenio.RutaDocumento) ? string.Empty : convenio.RutaDocumento.Substring(convenio.RutaDocumento.LastIndexOf('\\') + 1);
             convenio.Comentarios = reader["COMENTARIOS"] is DBNull ? string.Empty : Convert.ToString(reader["COMENTARIOS"]);
@@ -1107,12 +1171,13 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
                         convenioCompromiso.ConvenioId = readerCompromiso["ID_CONVENIO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_CONVENIO"]);
                         convenioCompromiso.CompromisoId = readerCompromiso["ID_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["ID_COMPROMISO"]);
+                        convenioCompromiso.NumeroCompromiso = readerCompromiso["NUMERO_COMPROMISO"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["NUMERO_COMPROMISO"]);
                         convenioCompromiso.Compromiso = readerCompromiso["COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["COMPROMISO"]);
                         convenioCompromiso.FechaCompromiso = readerCompromiso["FECHA_COMPROMISO"] is DBNull ? string.Empty : Convert.ToString(readerCompromiso["FECHA_COMPROMISO"]);
                         convenioCompromiso.Avance = readerCompromiso["AVANCE"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["AVANCE"]);
                         convenioCompromiso.Ponderacion = readerCompromiso["PONDERACION"] is DBNull ? 0 : Convert.ToInt32(readerCompromiso["PONDERACION"]);
 
-                        // Get the compromiso area
+                        // GetInformePeriodo the compromiso area
                         const string CompromisoParteStoredProcedureName = @"USP_COMPROMISO_PARTE_BY_ID";
 
                         // Add the PARTE model
@@ -1150,7 +1215,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                             }
                         }
 
-                        // Get the compromiso area
+                        // GetInformePeriodo the compromiso area
                         const string CompromisoAreaStoredProcedureName = @"USP_COMPROMISO_AREA_BY_ID";
 
                         // Create database command object.

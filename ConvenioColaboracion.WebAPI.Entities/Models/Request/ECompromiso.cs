@@ -28,6 +28,12 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         public int? ConvenioId { get; set; }
 
         /// <summary>
+        /// Gets or sets the NUMERO COMPROMISO.
+        /// </summary>
+        /// <value>The NUMERO COMPROMISO .</value>
+        public int NumeroCompromiso { get; set; }
+
+        /// <summary>
         /// Gets or sets the PARTE model.
         /// </summary>
         /// <value>The PARTE model.</value>

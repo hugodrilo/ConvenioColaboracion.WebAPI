@@ -58,5 +58,11 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         /// </summary>
         /// <returns>The list of TIPO areas.</returns>
         IEnumerable<ETipoArea> GetTipoArea();
+
+        /// <summary>
+        /// Gets the ESTATUS list from the database. 
+        /// </summary>
+        /// <returns>The list of ESTATUS.</returns>
+        IEnumerable<EEstatus> GetEstatus();
     }
 }

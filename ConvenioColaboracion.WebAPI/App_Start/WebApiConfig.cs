@@ -69,9 +69,47 @@ namespace ConvenioColaboracion.WebAPI
                 defaults: new { controller = "Parte", id = RouteParameter.Optional });
 
             config.Routes.MapHttpRoute(
-                name: "Documento",
-                routeTemplate: "api/file/{id}",
+                name: "File",
+                routeTemplate: "api/file/{action}/{id}",
                 defaults: new { controller = "File", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Busqueda",
+                routeTemplate: "api/busqueda/{searchText}",
+                defaults: new { controller = "Busqueda", searchText = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Compromiso",
+                routeTemplate: "api/compromiso/{id}",
+                defaults: new { controller = "Compromiso", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Actividad",
+                routeTemplate: "api/actividad/{action}/{id}",
+                defaults: new { controller = "Actividad", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Estatus",
+                routeTemplate: "api/estatus/{id}",
+                defaults: new { controller = "Estatus", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "Estadistica",
+                routeTemplate: "api/estadistica/{action}/{id}",
+                defaults: new { controller = "Estadistica", id = RouteParameter.Optional });
+
+            config.Routes.MapHttpRoute(
+                name: "EstadisticaAdmon",
+                routeTemplate: "api/estadistica/{action}/{admonId}/{matId}/{areaId}/{estatusId}",
+                defaults:
+                    new
+                    {
+                        controller = "Estadistica",
+                        admonId = RouteParameter.Optional,
+                        matId = RouteParameter.Optional,
+                        areaId = RouteParameter.Optional,
+                        estatusId = RouteParameter.Optional
+                    });
 
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";

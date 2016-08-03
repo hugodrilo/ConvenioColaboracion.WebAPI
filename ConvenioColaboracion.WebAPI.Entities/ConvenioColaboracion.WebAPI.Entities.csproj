@@ -41,6 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Request\EActividad.cs" />
+    <Compile Include="Models\Request\EBuscaConvenio.cs" />
+    <Compile Include="Models\Request\EInformeGrado.cs" />
+    <Compile Include="Models\Request\EInformeArea.cs" />
+    <Compile Include="Models\Request\EInformeMateria.cs" />
+    <Compile Include="Models\Request\EInformePeriodo.cs" />
+    <Compile Include="Models\Request\EEstadistica.cs" />
+    <Compile Include="Models\Request\EEstatus.cs" />
+    <Compile Include="Models\Request\ESexenio.cs" />
+    <Compile Include="Models\Request\EFiltrosBusqueda.cs" />
     <Compile Include="Models\Request\ETipoArea.cs" />
     <Compile Include="Models\Request\EArea.cs" />
     <Compile Include="Models\Request\EConvenioArea.cs" />
@@ -49,13 +59,16 @@
     <Compile Include="Models\Request\EParte.cs" />
     <Compile Include="Models\Request\ECompromiso.cs" />
     <Compile Include="Models\Request\EConvenio.cs" />
+    <Compile Include="Models\Return\EBuscaConvenio.cs" />
+    <Compile Include="Models\Return\EInformeGrado.cs" />
+    <Compile Include="Models\Return\EInformeArea.cs" />
+    <Compile Include="Models\Return\EInformeMateria.cs" />
+    <Compile Include="Models\Return\EInformePeriodo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Return\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

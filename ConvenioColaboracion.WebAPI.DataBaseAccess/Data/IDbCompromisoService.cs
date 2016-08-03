@@ -7,25 +7,18 @@
 
 namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 {
-    using System.Collections.Generic;
     using Entities.Models.Request;
 
     /// <summary>
-    /// The database CONVENIO service interface.
+    /// The database COMPROMISO service interface.
     /// </summary>
-    public interface IDbCompromisoService : IDbServiceBase<ECompromiso>
+    public interface IDbCompromisoService
     {
         /// <summary>
-        /// Gets all the CONVENIOS from the database. 
+        /// Gets the COMPROMISO from the database. 
         /// </summary>
-        /// <returns> Expected list of CONVENIOS.</returns>
-        IEnumerable<EConvenio> GetAll();
-
-        /// <summary>
-        /// Gets the specified CONVENIO from the database. 
-        /// </summary>
-        /// <param name="convenioId">The CONVENIO identifier.</param>
-        /// <returns>Expected CONVENIO model.</returns>
-        EConvenio Get(int convenioId);
+        /// <param name="compromisoId">The COMPROMISO identifier.</param>
+        /// <returns>Expected COMPROMISO model.</returns>
+        ECompromiso GetCompromiso(int compromisoId);
     }
 }

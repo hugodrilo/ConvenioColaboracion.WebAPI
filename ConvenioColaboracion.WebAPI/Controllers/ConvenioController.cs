@@ -52,7 +52,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The CONVENIO identifier.</param>
         /// <returns>The expected CONVENIO model.</returns>
-        [ActionName("Get")]
+        [ActionName("GetInformePeriodo")]
         [HttpGet]
         public HttpResponseMessage Get(int id)
         {
@@ -65,7 +65,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
             // Call the data service
             var convenio = this.DbConvenioService.Get(id);
 
-            // Get all the Convenio information from all the data tables involved
+            // GetInformePeriodo all the Convenio information from all the data tables involved
             if (convenio.ConvenioId == 0)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Convenio no encontrado");
@@ -79,6 +79,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// </summary>
         /// <param name="convenioRequest">The CONVENIO request model.</param>
         /// <returns>A value indicating whether the data was successful inserted or not.</returns>
+        [Authorize]
         [HttpPost]
         public HttpResponseMessage Post([FromBody] EConvenio convenioRequest)
         {
