@@ -151,7 +151,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             request.Filtros = new EFiltrosBusqueda();
             request.Pagina = 1;
-            request.Registros = 10;
+            request.Registros = 1000;
             request.Keywords = string.Empty;
             var areaList = new List<int>();
 
