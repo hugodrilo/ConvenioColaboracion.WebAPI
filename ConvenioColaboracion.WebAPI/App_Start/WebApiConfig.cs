@@ -111,6 +111,11 @@ namespace ConvenioColaboracion.WebAPI
                         estatusId = RouteParameter.Optional
                     });
 
+            config.Routes.MapHttpRoute(
+                name: "Alerta",
+                routeTemplate: "api/alerta/{action}/{id}",
+                defaults: new { controller = "Alerta", id = RouteParameter.Optional });
+
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";
             var cors = new EnableCorsAttribute(origins, "*", "*");

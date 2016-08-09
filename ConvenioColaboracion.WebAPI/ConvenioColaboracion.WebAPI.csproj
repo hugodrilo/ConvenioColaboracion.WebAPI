@@ -178,6 +178,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ActividadController.cs" />
+    <Compile Include="Controllers\AlertaController.cs" />
     <Compile Include="Controllers\CompromisoController.cs" />
     <Compile Include="Controllers\BusquedaController.cs" />
     <Compile Include="Controllers\EstadisticaController.cs" />
