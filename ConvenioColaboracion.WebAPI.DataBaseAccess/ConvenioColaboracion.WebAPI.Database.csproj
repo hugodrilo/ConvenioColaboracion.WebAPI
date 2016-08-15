@@ -50,11 +50,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DbCompromisoService.cs" />
+    <Compile Include="Data\DbAlertaService.cs" />
     <Compile Include="Data\DbConsultaService.cs" />
     <Compile Include="Data\DbActividadService.cs" />
     <Compile Include="Data\DbConvenioService.cs" />
     <Compile Include="Data\IDbCompromisoService.cs" />
     <Compile Include="Data\DbEstadisticaService.cs" />
+    <Compile Include="Data\IDbAlertaService.cs" />
     <Compile Include="Data\IDbEstadisticaService.cs" />
     <Compile Include="Data\IDbConsultaService.cs" />
     <Compile Include="Data\IDbActividadService.cs" />
