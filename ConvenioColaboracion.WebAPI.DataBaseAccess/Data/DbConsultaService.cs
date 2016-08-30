@@ -36,6 +36,7 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
             this.databaseHelper = databaseHelper;
         }
         #endregion
+
         /// <summary>
         /// Gets all the CONVENIOS from the database that matches the specified text. 
         /// </summary>

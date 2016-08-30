@@ -190,6 +190,7 @@
     <Compile Include="Controllers\AreaController.cs" />
     <Compile Include="Controllers\MateriaController.cs" />
     <Compile Include="Controllers\ConvenioController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WinAuthController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

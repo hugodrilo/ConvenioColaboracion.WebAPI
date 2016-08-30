@@ -52,6 +52,7 @@
     <Compile Include="Models\Request\EEstatus.cs" />
     <Compile Include="Models\Request\ESexenio.cs" />
     <Compile Include="Models\Request\EFiltrosBusqueda.cs" />
+    <Compile Include="Models\Request\EUser.cs" />
     <Compile Include="Models\Request\ETipoArea.cs" />
     <Compile Include="Models\Request\EArea.cs" />
     <Compile Include="Models\Request\EConvenioArea.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Models\Request\EParte.cs" />
     <Compile Include="Models\Request\ECompromiso.cs" />
     <Compile Include="Models\Request\EConvenio.cs" />
+    <Compile Include="Models\Return\User.cs" />
     <Compile Include="Models\Return\EBuscaConvenio.cs" />
     <Compile Include="Models\Return\EAlerta.cs" />
     <Compile Include="Models\Return\EInformeGrado.cs" />
