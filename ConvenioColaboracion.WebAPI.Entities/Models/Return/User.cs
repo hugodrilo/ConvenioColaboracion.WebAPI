@@ -7,6 +7,8 @@
 
 namespace ConvenioColaboracion.WebAPI.Entities.Models.Return
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The user return model.
     /// </summary>  
@@ -35,5 +37,11 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Return
         /// </summary>
         /// <value>The user institution.</value>
         public int InstitucionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user's profiles list.
+        /// </summary>
+        /// <value>The user's profiles list.</value>
+        public IEnumerable<UserProfile> Profiles { get; set; }
     }
 }
