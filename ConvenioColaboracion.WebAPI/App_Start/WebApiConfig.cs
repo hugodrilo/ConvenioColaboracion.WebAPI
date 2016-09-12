@@ -13,7 +13,7 @@ namespace ConvenioColaboracion.WebAPI
     using Newtonsoft.Json.Serialization;
 
     /// <summary>
-    /// Handles actions for the WebAPI
+    /// Handles actions for the WebAPI.
     /// </summary>
     public static class WebApiConfig
     {
@@ -124,7 +124,7 @@ namespace ConvenioColaboracion.WebAPI
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";
             var cors = new EnableCorsAttribute(origins, "*", "*");
-            cors.SupportsCredentials = true;
+            ////cors.SupportsCredentials = true;
             config.EnableCors(cors);
         }
     }

@@ -16,7 +16,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The Users controller implementation class.
     /// </summary>
-
+    [Authorize]
     public class UsersController : ApiController
     {
         /// <summary>
@@ -36,10 +36,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             var windowsIdentity = WindowsIdentity.GetCurrent();
 
-            if (windowsIdentity != null)
-            {
-                request.UserName = windowsIdentity.Name.Replace("SFP\\", string.Empty).ToUpper();
-            }
+            request.UserName = windowsIdentity.Name.Replace("SFP\\", string.Empty).ToUpper();
 
             // The database call.
             var userInDatabase = this.DbUserService.GetUser(request);
