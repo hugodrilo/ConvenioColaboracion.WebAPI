@@ -119,7 +119,7 @@ namespace ConvenioColaboracion.WebAPI
             // Setup CORS
             var origins = System.Configuration.ConfigurationManager.AppSettings.Get("AllowedOrigins") ?? " *";
             var cors = new EnableCorsAttribute(origins, "*", "*");
-            cors.SupportsCredentials = true;
+            //// cors.SupportsCredentials = true;
             config.EnableCors(cors);
         }
     }
