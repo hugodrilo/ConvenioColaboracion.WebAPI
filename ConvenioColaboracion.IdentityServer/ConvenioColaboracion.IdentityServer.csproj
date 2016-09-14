@@ -140,6 +140,12 @@
     </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConvenioColaboracion.WebAPI.Core\ConvenioColaboracion.WebAPI.Core.csproj">
+      <Project>{ce1596dd-36b6-43a5-980a-75a256152103}</Project>
+      <Name>ConvenioColaboracion.WebAPI.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
