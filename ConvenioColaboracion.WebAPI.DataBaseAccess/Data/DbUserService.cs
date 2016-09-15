@@ -8,6 +8,7 @@
 namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data;
     using Entities.Models.Request;
@@ -82,6 +83,38 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                     }
                                 }
                             }
+
+                            if (user.UserId > 0)
+                            {
+                                // The SQL stored procedure name.
+                                const string StoredProcedureNameUP = @"USP_USUARIO_PERFIL_SELECT";
+
+                                // Create database command object.
+                                using (var commandUserProfile = this.databaseHelper.CreateStoredProcDbCommand(StoredProcedureNameUP, connection))
+                                {
+                                    var profiles = new List<UserProfile>();
+
+                                    // Clear the parameters.
+                                    commandUserProfile.Parameters.Clear();
+
+                                    // Add the parameters to the list.
+                                    commandUserProfile.Parameters.Add(this.databaseHelper.CreateParameter("P_ID_USUARIO", OracleDbType.Int32, user.UserId));
+                                    commandUserProfile.Parameters.Add(this.databaseHelper.CreateParameter("refCursor", OracleDbType.RefCursor, 0, ParameterDirection.Output));
+
+                                    // Execute the reader.
+                                    using (var reader = commandUserProfile.ExecuteReader())
+                                    {
+                                        // Read the data rows.
+                                        while (reader.Read())
+                                        {
+                                            var up = GetUserProfileFromReader(reader);
+                                            profiles.Add(up);
+                                        }
+                                    }
+
+                                    user.Profiles = profiles;
+                                }
+                            }
                         }
                     }
                 }
@@ -111,6 +144,24 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
 
             return user;
         }
+
+        /// <summary>
+        /// Gets the user profile from the data reader.
+        /// </summary>
+        /// <param name="reader">The data reader.</param>
+        /// <returns>The expected user profile model.</returns>
+        private static UserProfile GetUserProfileFromReader(IDataReader reader)
+        {
+            var userProfile = new UserProfile();
+
+            userProfile.ProfileId = reader["ID_PERFIL"] is DBNull ? 0 : Convert.ToInt32(reader["ID_PERFIL"]);
+            userProfile.Profile = reader["PERFIL"] is DBNull ? string.Empty : Convert.ToString(reader["PERFIL"]);
+            userProfile.AreaId = reader["ID_AREA"] is DBNull ? 0 : Convert.ToInt32(reader["ID_AREA"]);
+            userProfile.InstitucionId = reader["ID_INSTITUCION"] is DBNull ? 0 : Convert.ToInt32(reader["ID_INSTITUCION"]);
+
+            return userProfile;
+        }
+
         #endregion
     }
 }

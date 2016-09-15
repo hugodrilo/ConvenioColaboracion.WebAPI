@@ -41,7 +41,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!convenios.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron convenios");
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No se encontraron convenios");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, convenios);

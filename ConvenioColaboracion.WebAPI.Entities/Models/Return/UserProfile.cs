@@ -19,6 +19,12 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Return
         public int ProfileId { get; set; }
 
         /// <summary>
+        /// Gets or sets the user's profile.
+        /// </summary>
+        /// <value>The user's profile.</value>
+        public string Profile { get; set; }
+
+        /// <summary>
         /// Gets or sets the institution identifier.
         /// </summary>
         /// <value>The user institution.</value>
