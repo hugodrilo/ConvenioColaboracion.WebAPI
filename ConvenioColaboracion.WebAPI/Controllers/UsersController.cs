@@ -7,7 +7,6 @@
 
 namespace ConvenioColaboracion.WebAPI.Controllers
 {
-    using System.Security.Principal;
     using System.Web.Http;
     using ConvenioColaboracion.WebAPI.DataBaseAccess.Data;
     using ConvenioColaboracion.WebAPI.Entities.Models.Request;
@@ -34,9 +33,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
             var user = new User();
             var request = new EUser();
 
-            var windowsIdentity = WindowsIdentity.GetCurrent();
-
-            request.UserName = windowsIdentity.Name.Replace("SFP\\", string.Empty).ToUpper();
+            request.UserName = User.Identity.Name.Replace("SFP\\", string.Empty).ToUpper();
 
             // The database call.
             var userInDatabase = this.DbUserService.GetUser(request);
