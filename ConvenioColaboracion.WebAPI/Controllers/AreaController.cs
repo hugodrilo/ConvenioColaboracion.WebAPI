@@ -17,7 +17,6 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The area controller implementation class.
     /// </summary>
-    [Authorize]
     public class AreaController : ApiController
     {
         /// <summary>

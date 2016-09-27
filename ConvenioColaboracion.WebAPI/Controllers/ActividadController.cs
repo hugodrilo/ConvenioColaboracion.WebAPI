@@ -19,6 +19,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The area controller implementation class.
     /// </summary>
+    [Authorize]
     public class ActividadController : ApiController
     {
         /// <summary>
@@ -37,6 +38,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// <param name="id">The ACTIVIDAD identifier</param>
         /// <returns>Expected ACTIVIDAD MODEL.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public HttpResponseMessage Get(int id)
         {
             // Call the data service
@@ -56,6 +58,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// <param name="id">The COMPROMISO identifier</param>
         /// <returns>Expected ACTIVIDAD MODEL.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public HttpResponseMessage GetAllById(int id)
         {
             // Call the data service
@@ -100,6 +103,12 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                     {
                         actividadRequest.Anexo = finalPath;
                     }
+                }
+
+                // Set the user.
+                if (!string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    actividadRequest.UsuarioCreacion = User.Identity.Name.Replace("SFP\\", string.Empty).ToUpper();
                 }
 
                 // Call the data service
@@ -147,6 +156,12 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                     {
                         actividadRequest.Anexo = finalPath;
                     }
+                }
+
+                // Set the user.
+                if (!string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    actividadRequest.UsuarioActualizacion = User.Identity.Name.Replace("SFP\\", string.Empty).ToUpper();
                 }
 
                 // Call the data service

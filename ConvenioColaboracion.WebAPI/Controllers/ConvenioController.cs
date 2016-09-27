@@ -19,6 +19,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The CONVENIO controller implementation class.
     /// </summary>
+    [Authorize]
     public class ConvenioController : ApiController
     {
         /// <summary>
@@ -32,6 +33,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// <returns>A list of CONVENIOS.</returns>
         [ActionName("GetAll")]
         [HttpGet]
+        [AllowAnonymous]
         public HttpResponseMessage GetAll()
         {
             // Call the data service
@@ -54,6 +56,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// <returns>The expected CONVENIO model.</returns>
         [ActionName("GetInformePeriodo")]
         [HttpGet]
+        [AllowAnonymous]
         public HttpResponseMessage Get(int id)
         {
             // Do not allow negative numbers
@@ -102,6 +105,12 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                     }
                 }
 
+                // Set the user.
+                if (!string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    convenioRequest.UsuarioCreacion = User.Identity.Name.Replace("SFP\\", string.Empty).ToUpper();
+                }
+
                 // Call the data service
                 var result = this.DbConvenioService.Insert(convenioRequest);
 
@@ -142,6 +151,12 @@ namespace ConvenioColaboracion.WebAPI.Controllers
                     {
                         convenioRequest.RutaDocumento = finalPath;
                     }
+                }
+
+                // Set the user.
+                if (!string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    convenioRequest.UsuarioActualizacion = User.Identity.Name.Replace("SFP\\", string.Empty).ToUpper();
                 }
 
                 // Call the data service
