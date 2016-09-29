@@ -14,6 +14,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
     /// <summary>
     /// The Windows Authentication controller implementation class.
     /// </summary>
+    [Authorize]
     public class WinAuthController : ApiController
     {
         /// <summary>

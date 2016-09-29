@@ -40,6 +40,7 @@ namespace ConvenioColaboracion.WebAPI
                 container.Register<IDbActividadService, DbActividadService>();
                 container.Register<IDbEstadisticaService, DbEstadisticaService>();
                 container.Register<IDbAlertaService, DbAlertaService>();
+                container.Register<IDbUserService, DbUserService>();
                 container.Register<IFileManagerUtility, FileManagerUtility>();
                 container.Register<ILogger, Logger>();
 
