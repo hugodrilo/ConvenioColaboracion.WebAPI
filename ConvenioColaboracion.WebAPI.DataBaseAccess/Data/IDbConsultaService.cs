@@ -19,7 +19,9 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
         /// Gets all the CONVENIOS from the database that matches the specified text. 
         /// </summary>
         /// <param name="searchText">The text to search</param>
+        /// <param name="usuarioId">The user identifier.</param>
+        /// <param name="operacionId">The operation identifier.</param>
         /// <returns>Expected list of CONVENIOS.</returns>
-        IEnumerable<EConvenio> Search(string searchText);
+        IEnumerable<EConvenio> Search(string searchText, int usuarioId = 0, int operacionId = 1);
     }
 }

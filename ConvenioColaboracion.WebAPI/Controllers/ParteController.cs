@@ -38,7 +38,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!partes.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron partes");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron partes");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, partes);

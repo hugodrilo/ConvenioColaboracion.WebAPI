@@ -46,7 +46,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (actividad == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron actividades.");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron actividades.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, actividad);

@@ -39,7 +39,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!materias.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron submaterias.");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron submaterias.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, materias);

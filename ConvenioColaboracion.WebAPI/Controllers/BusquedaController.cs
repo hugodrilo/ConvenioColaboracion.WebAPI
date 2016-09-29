@@ -28,9 +28,11 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         /// Gets a list of CONVENIOS.
         /// </summary>
         /// <param name="searchText">The text to be searched.</param>
+        /// <param name="usuarioId">The user identifier.</param>
+        /// <param name="operacionId">The operation identifier.</param>
         /// <returns>A list of CONVENIOS.</returns>
         [HttpGet]
-        public HttpResponseMessage Get(string searchText)
+        public HttpResponseMessage Get(string searchText, int usuarioId = 0, int operacionId = 1)
         {
             // Call the data service
             var convenioList = this.DbConsultaService.Search(searchText);
@@ -39,7 +41,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!convenios.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron convenios para la búsqueda solicitada.");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron convenios para la búsqueda solicitada.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, convenios);

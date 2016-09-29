@@ -46,7 +46,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!alertas.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron alertas inactivas.");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron alertas inactivas.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, alertas);
@@ -74,7 +74,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!alertas.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron alertas proximas a vencer.");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron alertas proximas a vencer.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, alertas);

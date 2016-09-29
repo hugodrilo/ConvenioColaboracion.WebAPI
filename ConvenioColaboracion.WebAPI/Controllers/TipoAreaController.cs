@@ -38,7 +38,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!tipoAarea.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron tipo de areas");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron tipo de areas");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, tipoAarea);
