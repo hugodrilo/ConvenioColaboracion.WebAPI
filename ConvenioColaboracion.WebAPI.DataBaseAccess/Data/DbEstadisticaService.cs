@@ -383,6 +383,8 @@ namespace ConvenioColaboracion.WebAPI.DataBaseAccess.Data
                                 command.Parameters.Add(this.databaseHelper.CreateParameter("P_REGISTROS", OracleDbType.Int32, request.Registros));
                                 command.Parameters.Add(this.databaseHelper.CreateParameter("P_KEYWORDS", OracleDbType.Varchar2, request.Keywords));
                                 command.Parameters.Add(this.databaseHelper.CreateParameter("P_FILTROS", OracleDbType.Varchar2, filtro));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("P_OPERACION", OracleDbType.Int32, request.OperacionId == null ? 1 : request.OperacionId));
+                                command.Parameters.Add(this.databaseHelper.CreateParameter("P_USUARIO", OracleDbType.Int32, request.UsuarioId == null ? 0 : request.UsuarioId));
                                 command.Parameters.Add(this.databaseHelper.CreateParameter("CUR_RESULTADO", OracleDbType.RefCursor, 0, ParameterDirection.Output));
 
                                 // Execute the reader.

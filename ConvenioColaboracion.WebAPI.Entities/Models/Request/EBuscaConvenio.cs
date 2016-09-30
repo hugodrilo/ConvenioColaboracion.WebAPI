@@ -35,5 +35,17 @@ namespace ConvenioColaboracion.WebAPI.Entities.Models.Request
         /// </summary>
         /// <value> The FILTROS model.</value>
         public EFiltrosBusqueda Filtros { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user identifier.
+        /// </summary>
+        /// <value>The user identifier.</value>
+        public int? UsuarioId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the operation identifier.
+        /// </summary>
+        /// <value>The operation identifier.</value>
+        public int? OperacionId { get; set; }
     }
 }
