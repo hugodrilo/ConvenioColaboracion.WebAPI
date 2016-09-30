@@ -35,7 +35,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
         public HttpResponseMessage Get(string searchText, int usuarioId = 0, int operacionId = 1)
         {
             // Call the data service
-            var convenioList = this.DbConsultaService.Search(searchText);
+            var convenioList = this.DbConsultaService.Search(searchText, usuarioId, operacionId);
 
             var convenios = convenioList as EConvenio[] ?? convenioList.ToArray();
 
