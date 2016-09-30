@@ -36,7 +36,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (compromiso.CompromisoId == 0)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontró compromiso con id: " + id);
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontró compromiso con id: " + id);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, compromiso);

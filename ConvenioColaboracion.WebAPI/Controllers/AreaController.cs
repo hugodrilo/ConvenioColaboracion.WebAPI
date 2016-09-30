@@ -38,7 +38,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!areas.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron areas.");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron areas.");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, areas);

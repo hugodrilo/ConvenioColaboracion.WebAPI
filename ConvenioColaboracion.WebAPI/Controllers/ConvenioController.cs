@@ -71,7 +71,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
             // GetInformePeriodo all the Convenio information from all the data tables involved
             if (convenio.ConvenioId == 0)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Convenio no encontrado");
+                return Request.CreateResponse(HttpStatusCode.OK, "Convenio no encontrado");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, convenio);

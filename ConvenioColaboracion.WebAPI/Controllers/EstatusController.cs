@@ -38,7 +38,7 @@ namespace ConvenioColaboracion.WebAPI.Controllers
 
             if (!estatus.Any())
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No se encontraron estatus (grado de cumplimiento).");
+                return Request.CreateResponse(HttpStatusCode.OK, "No se encontraron estatus (grado de cumplimiento).");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, estatus);
